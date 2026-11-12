@@ -3,8 +3,8 @@ import { creer, image, boutonIcone, auToucher } from './ui.js';
 import { reinitialiserDeblocages } from '../services/storage.js';
 import '../styles/home.css';
 
-// PROVISOIRE (tests) : true affiche un bouton qui oublie les polluants débloqués et le tutoriel vu ;
-// false le masque. À passer à false (ou supprimer) pour l'exposition.
+// Bouton « Réinitialiser les QR codes » (gardé pour les présentations) : true l'affiche,
+// false le masque. Il oublie, sur ce navigateur, le joueur, les polluants débloqués et le tutoriel vu.
 const BOUTON_REINITIALISER = true;
 
 /** params.jouer et params.scores : actions des deux boutons */

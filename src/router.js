@@ -19,7 +19,7 @@ export function enregistrer(nom, ecran) {
 export function aller(nom, params = {}) {
   const suivant = ecrans.get(nom);
   if (!suivant) {
-    console.warn(`Écran pas encore disponible : ${nom}`);
+    console.warn(`Écran inconnu : ${nom}`); // nom mal écrit dans le parcours
     return;
   }
   ecranActuel?.quitter?.();

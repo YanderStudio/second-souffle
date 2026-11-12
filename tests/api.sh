@@ -56,20 +56,21 @@ requete POST games.php "{\"player_id\":\"$J\"}"; TB=$(champ game_token)
 requete POST games.php "{\"player_id\":\"$J\"}"; TC=$(champ game_token)
 requete POST games.php "{\"player_id\":\"$J\"}"; TD=$(champ game_token)
 echo "   (attente de 4,5 s : durée minimale d'une partie)"; sleep 4.5
-requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"  Test Élodie \",\"counts\":{\"p1\":3,\"p3\":1},\"duree\":4.2}"
-verifier "score calculé par le serveur (3×50 + 1000)" 200 '"score":1150'
-requete GET scores.php; verifier "classement contient le pseudo (espaces retirés)" 200 '"pseudo":"Test Élodie","score":1150'
+# Scores de test élevés (plus de 10 000) pour figurer dans le top 10 malgré les vraies parties en base
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"  Test Élodie \",\"counts\":{\"p1\":1,\"p3\":16},\"duree\":4.2}"
+verifier "score calculé par le serveur (50 + 16×1000)" 200 '"score":16050'
+requete GET scores.php; verifier "classement contient le pseudo (espaces retirés)" 200 '"pseudo":"Test Élodie","score":16050'
 
 echo "== Classement par pseudo"
 requete POST scores.php "{\"game_token\":\"$TB\",\"pseudo\":\"Test Élodie\",\"counts\":{\"p1\":1},\"duree\":4.2}"; verifier "même pseudo, score plus faible : enregistré" 200 '"score":50'
-requete POST scores.php "{\"game_token\":\"$TC\",\"pseudo\":\"Test Autre\",\"counts\":{\"p1\":2},\"duree\":4.2}"; verifier "même joueur, autre pseudo" 200 '"score":100'
-requete POST scores.php "{\"game_token\":\"$TD\",\"pseudo\":\"test élodie\",\"counts\":{\"p1\":1},\"duree\":4.2}"; verifier "pseudo en minuscules (différent)" 200 '"score":50'
+requete POST scores.php "{\"game_token\":\"$TC\",\"pseudo\":\"Test Autre\",\"counts\":{\"p3\":15},\"duree\":4.2}"; verifier "même joueur, autre pseudo" 200 '"score":15000'
+requete POST scores.php "{\"game_token\":\"$TD\",\"pseudo\":\"test élodie\",\"counts\":{\"p3\":14},\"duree\":4.2}"; verifier "pseudo en minuscules (différent)" 200 '"score":14000'
 requete GET scores.php
 N=$(grep -o '"pseudo":"Test Élodie"' <<< "$CORPS" | wc -l)
-[ "$N" = 1 ] && [[ "$CORPS" == *'"pseudo":"Test Élodie","score":1150'* ]] \
-  && { OK=$((OK + 1)); echo "  OK  même pseudo : une seule ligne, le meilleur score (1150)"; } || { KO=$((KO + 1)); echo "  KO  même pseudo : $N ligne(s) $CORPS"; }
-verifier "autre pseudo du même joueur : sa propre ligne" 200 '"pseudo":"Test Autre","score":100'
-verifier "pseudo en minuscules : sa propre ligne" 200 '"pseudo":"test élodie","score":50'
+[ "$N" = 1 ] && [[ "$CORPS" == *'"pseudo":"Test Élodie","score":16050'* ]] \
+  && { OK=$((OK + 1)); echo "  OK  même pseudo : une seule ligne, le meilleur score (16050)"; } || { KO=$((KO + 1)); echo "  KO  même pseudo : $N ligne(s) $CORPS"; }
+verifier "autre pseudo du même joueur : sa propre ligne" 200 '"pseudo":"Test Autre","score":15000'
+verifier "pseudo en minuscules : sa propre ligne" 200 '"pseudo":"test élodie","score":14000'
 
 echo "== Jeton réutilisé"
 requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test\",\"counts\":{\"p1\":1},\"duree\":4.2}"; verifier "même jeton une 2e fois" 422

@@ -14,7 +14,7 @@
   color: var(--orange);
 }
 
-/* Bouton provisoire de test (voir BOUTON_REINITIALISER dans home.js) */
+/* Bouton « Réinitialiser les QR codes » (voir BOUTON_REINITIALISER dans home.js) */
 .accueil-reinit {
   position: absolute;
   top: calc(16 * var(--u));

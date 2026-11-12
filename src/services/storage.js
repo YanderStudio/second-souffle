@@ -43,7 +43,7 @@ export function enregistrerJoueur(id) {
 
 /**
  * Oublie le joueur, ses polluants débloqués et le tutoriel vu : le navigateur redevient un nouveau joueur
- * (bouton provisoire de l'accueil, ou joueur inconnu du serveur). Le dernier pseudo est gardé.
+ * (bouton « Réinitialiser les QR codes » de l'accueil, ou joueur inconnu du serveur). Le dernier pseudo est gardé.
  */
 export function reinitialiserDeblocages() {
   try {
