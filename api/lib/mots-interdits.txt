@@ -1,0 +1,47 @@
+# Mots interdits dans les pseudos (un par ligne). Comparaison sans accents ni majuscules.
+# Mot de 5 lettres ou moins : refusé s'il forme un mot entier du pseudo (évite « Unique » → « nique »).
+# Mot plus long : refusé s'il apparaît n'importe où (même collé, ex. « SuperConnard »).
+# Liste à compléter.
+connard
+connasse
+couille
+encule
+enculer
+enfoire
+batard
+bite
+chatte
+nique
+niquer
+nazi
+hitler
+pute
+putain
+salope
+merde
+pd
+pede
+fdp
+ntm
+tg
+negro
+negre
+bougnoul
+youpin
+gouine
+tapette
+fuck
+shit
+bitch
+asshole
+dick
+cunt
+nigger
+nigga
+whore
+slut
+porn
+porno
+sexe
+sex
+viol
