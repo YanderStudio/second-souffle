@@ -55,6 +55,9 @@ export const CONFIG = {
   deltaMax: 0.05,
   dprMax: 2,
 
+  // Décompte avant la reprise automatique (retour du scanner, sortie du menu pause), en secondes
+  decompteReprise: 3,
+
   // Temps d'arrêt sur l'image avant l'écran de fin (s)
   delaiDefaite: 0.8,
 };

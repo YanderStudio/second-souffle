@@ -98,3 +98,43 @@
 .jeu-menu__accueil {
   left: calc(50% + 80 * var(--u));
 }
+
+/* Décompte de reprise (3, 2, 1) : orange, police de titre, au milieu de l'écran */
+.jeu-decompte {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: calc(120 * var(--u));
+  color: var(--orange);
+  text-shadow: 0 0 calc(12 * var(--u)) rgb(0 0 0 / 0.5);
+  pointer-events: none;
+}
+
+.jeu-decompte[hidden] {
+  display: none;
+}
+
+/* Chaque chiffre apparaît en grossissant légèrement */
+.jeu-decompte--anime {
+  animation: decompte-apparition 0.35s ease-out;
+}
+
+@keyframes decompte-apparition {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(1.4);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jeu-decompte--anime {
+    animation: none;
+  }
+}

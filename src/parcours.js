@@ -1,7 +1,7 @@
 // Parcours entre les écrans (§6 du brief) :
 //  - première fois : Accueil → Explication → Scanner (p1) → Tutoriel → Fiche → Jeu
 //  - ensuite : Accueil → Jeu
-//  - en jeu : icône QR (pause) → Scanner → Fiche → retour au Jeu en pause
+//  - en jeu : icône QR (pause) → Scanner → Fiche → retour au Jeu, décompte 3, 2, 1 puis reprise
 //  - défaite : Fin (saisie) → Fin (récapitulatif) → Accueil
 import { aller } from './router.js';
 import { creerPartie } from './game/loop.js';
@@ -62,7 +62,7 @@ function versScanner() {
       return reponse;
     },
     // Fermer ramène au jeu en pause, ou à l'accueil hors partie
-    fermer: () => (partie ? versJeu() : versAccueil()),
+    fermer: () => (partie ? versJeu({ decompte: true }) : versAccueil()),
   });
 }
 
@@ -86,7 +86,7 @@ function versFiche(id, sonSuivant) {
     texte: p.texte,
     polluantImage: p.imageFiche ?? p.image,
     sonSuivant,
-    suivant: () => (partie ? versJeu() : nouvellePartie()),
+    suivant: () => (partie ? versJeu({ decompte: true }) : nouvellePartie()),
   });
 }
 
@@ -116,10 +116,11 @@ async function nouvellePartie() {
   versJeu();
 }
 
-function versJeu() {
+/** Jeu ; decompte : retour dans une partie en pause (après le scanner) → 3, 2, 1 puis reprise automatique. */
+function versJeu({ decompte = false } = {}) {
   // Tous les QR codes scannés : l'icône QR devient inactive
   const toutDebloque = polluants.every((p) => stockage.lireDebloques().includes(p.id));
-  aller('jeu', { partie, scanner: toutDebloque ? null : versScanner, accueil: versAccueil });
+  aller('jeu', { partie, decompte, scanner: toutDebloque ? null : versScanner, accueil: versAccueil });
 }
 
 /**
