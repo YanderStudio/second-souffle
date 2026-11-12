@@ -8,11 +8,11 @@ export const CONFIG = {
   // Rail orange (relevé sur « Ecran de Jeu.png ») ; y compté depuis le bas de la maquette (874)
   rail: { x1: 22, x2: 378, depuisBas: 874 - 740.5, epaisseur: 6, couleur: '#ff8639' },
 
-  // Carton : centré sur le rail, il reste entre les extrémités du rail
-  carton: { image: '/assets/images/carton.png', largeur: 100, hauteur: 50, xDepart: 201 },
+  // Carton (image : filet de pêche) : centré sur le rail, il reste entre les extrémités du rail
+  carton: { image: '/assets/images/filet.png', largeur: 100, hauteur: 121, xDepart: 201 },
 
-  // Poisson (placeholder remplaçable)
-  poisson: { image: '/assets/images/poisson.png', largeur: 100, hauteur: 50 },
+  // Poisson qui tombe, tête en bas
+  poisson: { image: '/assets/images/poisson.png', largeur: 70, hauteur: 80 },
 
   // Taille d'affichage des polluants en jeu (taille réelle des SVG)
   taillesPolluants: {

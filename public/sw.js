@@ -4,7 +4,7 @@
 // - Fichiers du jeu (scripts, styles, images, polices, .wasm) : cache d'abord, puis réseau.
 // Changer VERSION vide les anciens caches à la prochaine visite.
 
-const VERSION = 'second-souffle-v1';
+const VERSION = 'second-souffle-v2';
 const DEMARRAGE = ['/', '/manifest.webmanifest', '/assets/icons/pwa/icon-192.png', '/assets/icons/pwa/icon-512.png'];
 
 self.addEventListener('install', (evenement) => {
