@@ -41,6 +41,9 @@ export const CONFIG = {
   probabilitePoisson: 0.25,
   // Écart horizontal minimal entre un poisson et le polluant de la même rangée (en plus des demi-largeurs)
   margePoisson: 30,
+  // Hauteur maximale d'un poisson au-dessus de son polluant, en fraction de l'écart entre deux polluants
+  // (au-delà de 0,5, il pourrait croiser le polluant suivant)
+  decalagePoissonMax: 0.45,
 
   // Vitesse de déplacement du carton jugée faisable par un joueur (px/s) :
   // l'écart horizontal entre deux polluants successifs en tient compte

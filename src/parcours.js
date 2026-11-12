@@ -101,7 +101,7 @@ async function nouvellePartie() {
 }
 
 function versJeu() {
-  aller('jeu', { partie, scanner: versScanner });
+  aller('jeu', { partie, scanner: versScanner, accueil: versAccueil });
 }
 
 /**

@@ -33,3 +33,64 @@
   width: 100%;
   height: 100%;
 }
+
+/* Icône Pause 70 × 70, sous l'icône QR (même colonne, 10 px plus bas) */
+.jeu-pause {
+  position: absolute;
+  left: calc(299 * var(--u));
+  top: calc(110 * var(--u));
+  width: calc(70 * var(--u));
+  height: calc(70 * var(--u));
+}
+
+.jeu-pause__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Menu pause : voile sombre sur tout l'écran, contenu centré verticalement */
+.jeu-menu {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.6);
+}
+
+.jeu-menu[hidden] {
+  display: none;
+}
+
+.jeu-menu__titre,
+.jeu-menu__score {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.jeu-menu__titre {
+  top: calc(50% - 150 * var(--u));
+  font-size: calc(32 * var(--u));
+}
+
+.jeu-menu__score {
+  top: calc(50% - 100 * var(--u));
+  color: var(--orange);
+}
+
+/* Reprendre et Accueil côte à côte */
+.jeu-menu__reprendre,
+.jeu-menu__accueil {
+  top: calc(50% - 20 * var(--u));
+  --taille-icone: 80;
+  --ecart: 12;
+  color: var(--orange);
+}
+
+.jeu-menu__reprendre {
+  left: calc(50% - 80 * var(--u));
+}
+
+.jeu-menu__accueil {
+  left: calc(50% + 80 * var(--u));
+}

@@ -1,8 +1,9 @@
 // Apparitions : polluants débloqués tirés au hasard, poissons de temps en temps.
 // Toute situation reste gagnable :
 //  - l'écart horizontal entre deux polluants est faisable à la vitesse du carton ;
-//  - un poisson partage la rangée d'un polluant, du côté opposé à l'arrivée du carton,
-//    sans jamais le recouvrir ; le polluant suivant n'oblige pas à traverser ce poisson.
+//  - un poisson apparaît du côté d'un polluant opposé à l'arrivée du carton, à une distance
+//    et un peu au-dessus de lui tirées au hasard ; il arrive avant le polluant suivant,
+//    qui n'oblige jamais à le traverser.
 import { CONFIG } from './config.js';
 import { creerPolluant, creerPoisson } from './entities.js';
 
@@ -62,7 +63,10 @@ export function creerSpawner(debloques) {
     // Tirage du poisson ; faute de place, il est reporté sur un polluant suivant
     if (Math.random() < CONFIG.probabilitePoisson) poissonsEnAttente++;
     if (poissonsEnAttente > 0) {
-      const poisson = placerPoisson(polluant, dernierX);
+      const { vitesse, intervalle } = rythme(score);
+      // Hauteur au-dessus du polluant : au plus une fraction de l'écart avec le polluant suivant
+      const decalage = auHasard(0, CONFIG.decalagePoissonMax * vitesse * intervalle);
+      const poisson = placerPoisson(polluant, dernierX, decalage);
       if (poisson) {
         nouveaux.push(poisson);
         cotePoisson = Math.sign(poisson.x - x);
@@ -75,11 +79,14 @@ export function creerSpawner(debloques) {
   };
 }
 
-/** Place un poisson sur la rangée du polluant, du côté opposé à l'arrivée du carton ; null si pas de place. */
-function placerPoisson(polluant, xPrecedent) {
+/**
+ * Place un poisson du côté du polluant opposé à l'arrivée du carton, n'importe où entre
+ * l'écart minimal et le bord de l'écran, decalage pixels plus haut ; null si pas de place.
+ */
+function placerPoisson(polluant, xPrecedent, decalage) {
   const { largeur } = CONFIG.poisson;
   const ecart = (polluant.largeur + largeur) / 2 + CONFIG.margePoisson;
-  const dansEcran = (x) => x - largeur / 2 >= 0 && x + largeur / 2 <= CONFIG.largeur;
+  const bord = CONFIG.largeur - largeur / 2; // centre le plus à droite (le plus à gauche : largeur / 2)
 
   let cotes;
   if (polluant.x > xPrecedent) cotes = [1];
@@ -87,8 +94,9 @@ function placerPoisson(polluant, xPrecedent) {
   else cotes = Math.random() < 0.5 ? [1, -1] : [-1, 1];
 
   for (const cote of cotes) {
-    const x = polluant.x + cote * ecart;
-    if (dansEcran(x)) return creerPoisson(x, polluant.y);
+    const proche = polluant.x + cote * ecart;
+    const loin = cote > 0 ? bord : largeur / 2;
+    if ((loin - proche) * cote >= 0) return creerPoisson(auHasard(proche, loin), polluant.y - decalage);
   }
   return null;
 }
