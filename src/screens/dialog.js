@@ -1,7 +1,7 @@
 // Bulle de dialogue (Explication, Tutoriel, Fiche polluant) :
 // personnage qui « parle », texte écrit lettre par lettre, flèche pour continuer.
 import { creer, image, auToucher } from './ui.js';
-import { play } from '../services/audio.js';
+import { play, parler } from '../services/audio.js';
 import { ecrireLettreParLettre } from './typewriter.js';
 import textes from '../data/textes.json';
 import '../styles/dialog.css';
@@ -57,10 +57,21 @@ export function entrer(racine, params) {
 
   // Alternance des bouches pendant l'écriture
   const parle = (ouverte) => ecran.classList.toggle('parle', ouverte);
+  // Voix « blabla » : un son de la voix du personnage toutes les quelques lettres (espaces et ponctuation = silence)
+  let lettresSansSon = textes.voixLettresParSon; // la première lettre fait tout de suite un son
+  const surLettres = (lettres) => {
+    for (const lettre of lettres) {
+      if (!/[\p{L}\p{N}]/u.test(lettre)) continue;
+      if (++lettresSansSon < textes.voixLettresParSon) continue;
+      lettresSansSon = 0;
+      parler(perso.voix);
+    }
+  };
   const ecriture = ecrireLettreParLettre(texte, params.texte, {
     vitesse: textes.vitesseLettres,
     alternanceMs: textes.alternanceBoucheMs,
     surBouche: parle,
+    surLettres,
   });
   arreter = ecriture.arreter;
 

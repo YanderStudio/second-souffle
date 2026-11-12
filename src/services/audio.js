@@ -3,6 +3,12 @@
 // Appels placés : 'clic' (boutons et dialogues), 'plouf' (lancement d'une partie : fermeture de la
 // fiche du premier polluant la toute première fois, puis bouton Jouer),
 // 'ramassage', 'defaite', 'deblocage' (encore muets : aucun fichier).
+// Voix des personnages : fichiers indiqués dans textes.json (personnages → voix), joués par parler().
+import textes from '../data/textes.json';
+
+const VOLUME_VOIX = 0.35; // les sons de voix sont enregistrés très fort
+const HAUTEUR_VOIX = [0.92, 1.12]; // légère variation de hauteur à chaque son, comme une vraie voix
+
 const SONS = {
   clic: ['/assets/sons/water-click.mp3', '/assets/sons/water-click2.mp3'],
   plouf: ['/assets/sons/water-splash.mp3'],
@@ -26,7 +32,8 @@ export function prechargerSons() {
   document.addEventListener('pointerdown', debloquer, { capture: true });
   document.addEventListener('keydown', debloquer, { capture: true });
 
-  for (const fichier of new Set(Object.values(SONS).flat())) {
+  const voix = Object.values(textes.personnages).flatMap((p) => p.voix ?? []);
+  for (const fichier of new Set([...Object.values(SONS).flat(), ...voix])) {
     fetch(fichier)
       .then((reponse) => reponse.arrayBuffer())
       .then((donnees) => contexte.decodeAudioData(donnees))
@@ -46,15 +53,28 @@ function debutDuSon(tampon) {
   return Math.max(0, i / tampon.sampleRate - 0.005); // 5 ms de marge pour ne pas couper l'attaque
 }
 
-/** Joue le son nommé ; ne fait rien s'il n'a pas de fichier ou n'est pas encore chargé. */
-export function play(nom) {
-  const fichiers = SONS[nom] ?? [];
+/** Joue un des fichiers (tiré au hasard), au volume et à la hauteur donnés ; rien s'il n'est pas chargé. */
+function jouerUnDe(fichiers, volume = 1, hauteur = 1) {
   if (!contexte || !fichiers.length) return;
   const son = tampons.get(fichiers[Math.floor(Math.random() * fichiers.length)]);
   if (!son) return;
   if (contexte.state !== 'running') contexte.resume().catch(() => {});
   const source = contexte.createBufferSource();
   source.buffer = son.tampon;
-  source.connect(contexte.destination);
+  source.playbackRate.value = hauteur;
+  const gain = contexte.createGain();
+  gain.gain.value = volume;
+  source.connect(gain).connect(contexte.destination);
   source.start(0, son.debut);
+}
+
+/** Joue le son nommé ; ne fait rien s'il n'a pas de fichier ou n'est pas encore chargé. */
+export function play(nom) {
+  jouerUnDe(SONS[nom] ?? []);
+}
+
+/** Une « syllabe » de la voix d'un personnage : un de ses sons, hauteur légèrement variée. */
+export function parler(voix = []) {
+  const [min, max] = HAUTEUR_VOIX;
+  jouerUnDe(voix, VOLUME_VOIX, min + Math.random() * (max - min));
 }

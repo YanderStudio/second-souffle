@@ -4,9 +4,14 @@
 /**
  * @param {HTMLElement} el      conteneur du texte
  * @param {string} texte        texte complet
- * @param {object} options      vitesse (lettres/s), alternanceMs, surBouche(ouverte)
+ * @param {object} options      vitesse (lettres/s), alternanceMs, surBouche(ouverte),
+ *                              surLettres(lettres) : lettres apparues depuis l'image précédente (pas quand on termine d'un coup)
  */
-export function ecrireLettreParLettre(el, texte, { vitesse = 30, alternanceMs = 130, surBouche = () => {} } = {}) {
+export function ecrireLettreParLettre(
+  el,
+  texte,
+  { vitesse = 30, alternanceMs = 130, surBouche = () => {}, surLettres = () => {} } = {},
+) {
   const visible = document.createElement('span');
   const reserve = document.createElement('span');
   reserve.style.visibility = 'hidden';
@@ -29,6 +34,7 @@ export function ecrireLettreParLettre(el, texte, { vitesse = 30, alternanceMs = 
     if (debut === null) debut = t;
     const ecoule = t - debut;
     const n = Math.min(lettres.length, Math.floor((ecoule * vitesse) / 1000));
+    if (n > affichees) surLettres(lettres.slice(Math.max(affichees, 0), n));
     afficher(n);
     if (n >= lettres.length) return finir();
     surBouche(Math.floor(ecoule / alternanceMs) % 2 === 1);

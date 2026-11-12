@@ -2,11 +2,13 @@
   "_note": "Textes de l'interface. Noms des personnages provisoires, à valider.",
   "vitesseLettres": 35,
   "alternanceBoucheMs": 130,
+  "_voix": "Voix façon « blabla » : un son de la voix du personnage (tiré au hasard) toutes les voixLettresParSon lettres.",
+  "voixLettresParSon": 3,
   "afficherNomFamille": false,
   "personnages": {
-    "pull-creme": { "prenom": "Léa", "nomFamille": "MARTIN", "bouche": "/assets/personnages/pull-creme" },
-    "polo-gris": { "prenom": "Karim", "nomFamille": "BENALI", "bouche": "/assets/personnages/polo-gris" },
-    "salopette": { "prenom": "Inès", "nomFamille": "DIALLO", "bouche": "/assets/personnages/salopette" }
+    "pull-creme": { "prenom": "Léa", "nomFamille": "MARTIN", "bouche": "/assets/personnages/pull-creme", "voix": ["/assets/sons/voix/bleep012.wav", "/assets/sons/voix/bleep016.wav", "/assets/sons/voix/bleep027.wav"] },
+    "polo-gris": { "prenom": "Karim", "nomFamille": "BENALI", "bouche": "/assets/personnages/polo-gris", "voix": ["/assets/sons/voix/bleep004.wav", "/assets/sons/voix/bleep024.wav", "/assets/sons/voix/bleep025.wav"] },
+    "salopette": { "prenom": "Inès", "nomFamille": "DIALLO", "bouche": "/assets/personnages/salopette", "voix": ["/assets/sons/voix/bleep017.wav", "/assets/sons/voix/bleep026.wav", "/assets/sons/voix/bleep028.wav"] }
   },
   "explication": {
     "personnage": "pull-creme",
