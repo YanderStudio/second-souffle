@@ -1,0 +1,26 @@
+{
+  "_note": "Textes de l'interface. Noms des personnages provisoires, à valider.",
+  "vitesseLettres": 30,
+  "alternanceBoucheMs": 130,
+  "personnages": {
+    "pull-creme": { "nom": "Léa MARTIN", "bouche": "/assets/personnages/pull-creme" },
+    "polo-gris": { "nom": "Karim BENALI", "bouche": "/assets/personnages/polo-gris" },
+    "salopette": { "nom": "Inès DIALLO", "bouche": "/assets/personnages/salopette" }
+  },
+  "explication": {
+    "personnage": "pull-creme",
+    "texte": "Tout au long de l’exposition, vous trouverez des QR Codes à scanner pour avancer dans le jeu, scannez votre tout premier QR code pour commencer."
+  },
+  "tutoriel": {
+    "personnage": "pull-creme",
+    "texte": "Parfait ! Vous avez scanné le tout premier polluant, tout au long de votre partie, votre objectif sera de ramasser le plus de polluants possible ! Attention à ne pas ramasser de poissons ou à laisser s’échapper des polluants, sinon, c’est perdu !"
+  },
+  "fin": {
+    "perdu": "Perdu !",
+    "scoreFinal": "Score final :",
+    "pseudo": "Pseudo :",
+    "pseudoManquant": "Pseudo manquant : entrez votre pseudo.",
+    "pseudoInvalide": "3 à 15 lettres, chiffres, espaces, - ou _."
+  },
+  "classement": { "titre": "Top Scores" }
+}

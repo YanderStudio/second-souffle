@@ -1,0 +1,24 @@
+/* Écran Classement — Tableau_des_scores.png, bloc central ancré au milieu */
+.scores-titre {
+  position: absolute;
+  left: calc(64 * var(--u));
+  top: calc(50% + (296.5 - 437) * var(--u));
+  color: var(--orange);
+}
+
+.scores-liste {
+  position: absolute;
+  left: calc(64 * var(--u));
+  top: calc(50% + (330.8 - 437) * var(--u));
+  width: calc(273 * var(--u));
+  list-style: none;
+  font-size: calc(20 * var(--u));
+  line-height: calc(23 * var(--u));
+}
+
+.scores-ligne {
+  display: flex;
+  white-space: nowrap;
+}
+
+.scores-ligne__score { color: var(--orange); }

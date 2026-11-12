@@ -1,0 +1,79 @@
+/* Bulle de dialogue — mesures relevées sur Explication.png, Tutoriel.png, Explications_Polluant_*.png */
+
+/* Personnage : ancré au bas de l'écran, derrière la bulle */
+.perso {
+  position: absolute;
+  left: calc(var(--perso-x) * var(--u));
+  top: calc(100% - (874 - var(--perso-y)) * var(--u));
+  width: calc(var(--perso-l) * var(--u));
+  pointer-events: none;
+}
+.perso-pull-creme { --perso-x: 104; --perso-y: 172.6; --perso-l: 214; }
+.perso-polo-gris  { --perso-x: 102; --perso-y: 173; --perso-l: 175; }
+.perso-salopette  { --perso-x: 52;  --perso-y: 158.3; --perso-l: 286; }
+
+/* Bouche ouverte visible seulement pendant l'alternance */
+.perso--ouvert { visibility: hidden; }
+.parle .perso--ouvert { visibility: visible; }
+.parle .perso--ferme { visibility: hidden; }
+
+/* Bulle : ancrée en bas, hauteur selon le texte complet */
+.bulle {
+  position: absolute;
+  left: calc(21 * var(--u));
+  bottom: calc(42 * var(--u));
+  width: calc(360 * var(--u));
+  padding: calc(22.5 * var(--u)) calc(25 * var(--u)) calc(20.6 * var(--u)) calc(20 * var(--u));
+  background: var(--bulle);
+  border-radius: var(--rayon-bulle);
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.bulle__nom {
+  color: var(--orange);
+  margin-bottom: calc(10.5 * var(--u));
+}
+
+.bulle__texte {
+  color: var(--turquoise);
+  font-size: calc(15 * var(--u));
+  line-height: calc(17 * var(--u));
+}
+
+.bulle__fleche {
+  justify-self: center;
+  width: calc(37.2 * var(--u));
+  height: calc(37.2 * var(--u));
+  margin-top: calc(19.2 * var(--u));
+  /* la flèche reste centrée sur la bulle malgré le padding asymétrique */
+  transform: translateX(calc(2.5 * var(--u)));
+}
+.bulle__fleche img { width: 100%; height: 100%; display: block; }
+
+/* Variante avec image de polluant : colonne image à gauche */
+.bulle--polluant {
+  padding-right: calc(21 * var(--u));
+  grid-template-columns: calc(94 * var(--u)) calc(216 * var(--u));
+  column-gap: calc(9 * var(--u));
+}
+.bulle--polluant .bulle__polluant {
+  grid-row: 1 / 3;
+  align-self: center;
+  justify-self: center;
+}
+.bulle--polluant .bulle__nom,
+.bulle--polluant .bulle__texte { grid-column: 2; }
+.bulle--polluant .bulle__fleche {
+  grid-column: 1 / 3;
+  transform: translateX(calc(0.5 * var(--u)));
+}
+
+/* Image du polluant à sa taille réelle (en unités maquette) */
+.bulle__polluant { width: calc(var(--l, 56) * var(--u)); }
+
+/* Corail en bas à droite de la bulle */
+.corail--bulle {
+  left: calc(310.7 * var(--u));
+  top: calc(100% - (874 - 757.5) * var(--u));
+}

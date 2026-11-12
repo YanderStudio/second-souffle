@@ -1,0 +1,96 @@
+/* Écrans de fin — Ecran_de_fin_Username.png et Ecran_de_fin.png
+   Bloc central ancré au milieu de l'écran : top = 50 % + (Y - 437) u */
+
+.fin-perdu,
+.fin-label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: var(--blanc);
+}
+.ecran-fin--saisie .fin-perdu { top: calc(50% + (309.5 - 437) * var(--u)); }
+.ecran-fin--recap .fin-perdu { top: calc(50% + (289.5 - 437) * var(--u)); }
+.fin-label { top: calc(50% + (478.5 - 437) * var(--u)); }
+
+/* Carte « Score final » */
+.fin-carte {
+  position: absolute;
+  left: calc(21 * var(--u));
+  width: calc(360 * var(--u));
+  height: calc(100 * var(--u));
+  padding: calc(20.5 * var(--u)) calc(52 * var(--u)) 0 calc(21 * var(--u));
+  background: var(--bulle);
+  border-radius: var(--rayon-bulle);
+}
+.ecran-fin--saisie .fin-carte { top: calc(50% + (357 - 437) * var(--u)); }
+.ecran-fin--recap .fin-carte { top: calc(50% + (363 - 437) * var(--u)); }
+
+.fin-carte__titre { color: var(--orange); }
+
+.fin-carte__score,
+.fin-carte__ligne {
+  margin-top: calc(13.5 * var(--u));
+  font-size: calc(20 * var(--u));
+  line-height: calc(20 * var(--u));
+}
+.fin-carte__score,
+.fin-carte__points { color: var(--orange); }
+
+/* Ligne pseudo ........ score */
+.fin-carte__ligne {
+  display: flex;
+  white-space: nowrap;
+  color: var(--turquoise);
+}
+
+.fin-carte__corail {
+  left: calc(290 * var(--u));
+  top: calc(25.5 * var(--u));
+}
+
+/* Champ pseudo avec bouton Play de validation à droite */
+.fin-pseudo {
+  position: absolute;
+  left: calc(21 * var(--u));
+  top: calc(50% + (526 - 437) * var(--u));
+  width: calc(360 * var(--u));
+  height: calc(40 * var(--u));
+  display: flex;
+  align-items: center;
+  background: var(--blanc);
+  border-radius: var(--rayon-champ);
+}
+
+.fin-pseudo__champ {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 calc(21 * var(--u));
+  border: none;
+  background: none;
+  outline: none;
+  font: inherit;
+  font-size: calc(20 * var(--u));
+  color: var(--turquoise);
+  user-select: text;
+}
+
+.fin-pseudo__valider {
+  width: calc(34 * var(--u));
+  height: calc(34 * var(--u));
+  margin-right: calc(6 * var(--u));
+}
+.fin-pseudo__valider img { width: 100%; height: 100%; display: block; }
+
+/* Message d'erreur, sous le champ */
+.fin-message {
+  position: absolute;
+  left: calc(21 * var(--u));
+  right: calc(21 * var(--u));
+  top: calc(50% + (577 - 437) * var(--u));
+  text-align: center;
+  font-size: calc(15 * var(--u));
+  line-height: calc(17 * var(--u));
+  color: var(--orange);
+}

@@ -1,15 +1,17 @@
 /* Jetons de design relevés dans la maquette Figma (base 402 × 874) */
 :root {
-  /* Unité d'échelle : 1 px maquette = largeur de la colonne / 402 */
+  /* Largeur de la colonne : tout l'écran sur téléphone, 430 px au plus */
   --largeur-max: 430px;
-  --u: calc(min(100vw, var(--largeur-max)) / 402);
+  --largeur-colonne: min(100vw, var(--largeur-max));
+  /* Unité d'échelle : 1 px maquette = largeur de la colonne / 402 */
+  --u: calc(var(--largeur-colonne) / 402);
 
   /* Couleurs */
   --orange: #ff8639;
   --turquoise: #00acb0;
   --bleu-nuit: #000f6b;
   --blanc: #ffffff;
-  --bulle: #ffffff;
+  --bulle: #f3f5ff; /* blanc bleuté relevé sur la maquette */
   --noir: #000000;
   --fond-neutre: #1c1c1c;
 
@@ -25,4 +27,11 @@
   /* Rayons */
   --rayon-bulle: calc(30 * var(--u));
   --rayon-champ: calc(20 * var(--u));
+}
+
+/* Écran large (PC) : colonne au ratio de la maquette, calée sur la hauteur de la fenêtre */
+@media (min-aspect-ratio: 3/4) {
+  :root {
+    --largeur-colonne: min(var(--largeur-max), 100dvh * 402 / 874);
+  }
 }

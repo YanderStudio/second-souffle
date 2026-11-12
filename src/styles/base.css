@@ -39,7 +39,7 @@ body {
 /* Colonne au ratio téléphone, centrée sur grand écran */
 #app {
   position: relative;
-  width: min(100vw, var(--largeur-max));
+  width: var(--largeur-colonne);
   height: 100vh;
   height: 100dvh;
   margin: 0 auto;
@@ -47,14 +47,15 @@ body {
   touch-action: none;
 }
 
-/* Fond marin : image ancrée en bas + dégradés noirs haut et bas */
+/* Fond marin : dégradés noirs haut et bas sur l'image,
+   image 3,7 % plus haute que l'écran et centrée (comme dans Figma) */
 .fond {
   position: absolute;
   inset: 0;
   background:
     linear-gradient(to bottom, var(--ombre-haut), transparent 50%),
     linear-gradient(to top, var(--ombre-bas), transparent 50%),
-    url('/assets/images/fond-marin.png') center bottom / cover no-repeat;
+    url('/assets/images/fond-marin.png') center / auto 103.7% no-repeat;
 }
 
 /* Cercle noir flou au centre (reproduction du blur Figma) */
@@ -98,4 +99,70 @@ button {
   inset: 0;
   background: var(--voile-eau);
   pointer-events: none;
+}
+
+/* ---------- Éléments communs aux écrans ---------- */
+
+.ecran {
+  position: absolute;
+  inset: 0;
+}
+
+/* Titres : Montserrat Black 24 px */
+.titre {
+  font-family: var(--police-titre);
+  font-weight: 900;
+  font-size: calc(24 * var(--u));
+  line-height: 1;
+}
+
+/* Bouton icône + libellé, centré horizontalement */
+.bouton-icone {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--police-titre);
+  font-weight: 900;
+  font-size: calc(24 * var(--u));
+  line-height: 1;
+}
+
+.bouton-icone__image {
+  width: calc(var(--taille-icone) * var(--u));
+  height: calc(var(--taille-icone) * var(--u));
+}
+
+.bouton-icone__libelle {
+  margin-top: calc(var(--ecart) * var(--u));
+}
+
+/* Bouton Accueil (fin et classement) */
+.bouton-accueil {
+  top: calc(100% - (874 - 686.4) * var(--u));
+  --taille-icone: 80;
+  --ecart: 12;
+  color: var(--orange);
+}
+
+/* Bouton inactif : atténué comme sur la maquette */
+.bouton-icone.est-inactif {
+  opacity: 0.7;
+}
+
+/* Corail décoratif */
+.corail {
+  position: absolute;
+  width: calc(98 * var(--u));
+  pointer-events: none;
+}
+
+/* Pointillés de remplissage entre un pseudo et un score */
+.pointilles {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  margin: 0 calc(4 * var(--u));
 }
