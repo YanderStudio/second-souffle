@@ -57,19 +57,21 @@ function apresDeblocage(id, nouveau) {
   if (nouveau) play('deblocage');
   if (id === 'p1' && !stockage.tutorielVu()) {
     stockage.marquerTutorielVu();
-    aller('dialogue', { ...textes.tutoriel, suivant: () => versFiche(id) });
+    // Première partie : le plouf accompagne la fermeture de la fiche du premier polluant
+    aller('dialogue', { ...textes.tutoriel, suivant: () => versFiche(id, 'plouf') });
   } else {
     versFiche(id);
   }
 }
 
 /** Fiche polluant ; la flèche mène au jeu : reprise de la partie en cours, sinon nouvelle partie. */
-function versFiche(id) {
+function versFiche(id, sonSuivant) {
   const p = polluants.find((x) => x.id === id);
   aller('dialogue', {
     personnage: p.personnage,
     texte: p.texte,
     polluantImage: p.imageFiche ?? p.image,
+    sonSuivant,
     suivant: () => (partie ? versJeu() : nouvellePartie()),
   });
 }

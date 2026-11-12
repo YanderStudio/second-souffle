@@ -1,6 +1,7 @@
 // Bulle de dialogue (Explication, Tutoriel, Fiche polluant) :
 // personnage qui « parle », texte écrit lettre par lettre, flèche pour continuer.
 import { creer, image, auToucher } from './ui.js';
+import { play } from '../services/audio.js';
 import { ecrireLettreParLettre } from './typewriter.js';
 import textes from '../data/textes.json';
 import '../styles/dialog.css';
@@ -20,7 +21,8 @@ export function prechargerPersonnages() {
 }
 
 /**
- * params : { personnage, texte, polluantImage?, suivant }
+ * params : { personnage, texte, polluantImage?, suivant, sonSuivant? }
+ *  - sonSuivant : son joué en quittant la boîte de dialogue à la place du clic
  *  - personnage : id dans textes.json (pull-creme, polo-gris, salopette)
  *  - polluantImage : facultatif, affiche la variante avec image
  *  - suivant : appelé quand le joueur passe à l'écran suivant
@@ -63,10 +65,19 @@ export function entrer(racine, params) {
   arreter = ecriture.arreter;
 
   // Toucher : termine le texte, puis passe à l'écran suivant
-  auToucher(ecran, () => {
-    if (!ecriture.estTermine()) ecriture.terminer();
-    else params.suivant();
-  });
+  auToucher(
+    ecran,
+    () => {
+      if (!ecriture.estTermine()) {
+        play('clic');
+        ecriture.terminer();
+      } else {
+        play(params.sonSuivant ?? 'clic');
+        params.suivant();
+      }
+    },
+    null,
+  );
 }
 
 export function quitter() {
