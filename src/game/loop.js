@@ -19,7 +19,8 @@ export function creerPartie({ debloques, surDefaite }) {
   const objets = [];
   const compteurs = {};
   let score = 0;
-  let tempsJeu = 0; // temps de jeu sans les pauses
+  let tempsJeu = 0; // durée de jeu sans les pauses (envoyée avec le score)
+  let vitesse = CONFIG.vitesseDepart; // vitesse de chute actuelle (px/s)
   let enPause = false;
   let perdue = false;
   let carton = null;
@@ -59,8 +60,10 @@ export function creerPartie({ debloques, surDefaite }) {
   /** Une étape de jeu de durée dt (s). */
   function mettreAJour(dt) {
     tempsJeu += dt;
-    objets.push(...avancerSpawner(dt, tempsJeu));
-    const { vitesse } = rythme(tempsJeu);
+    objets.push(...avancerSpawner(dt, score));
+    // La vitesse rejoint en douceur celle que donne le score (accélère avec les points)
+    const cible = rythme(score).vitesse;
+    vitesse += (cible - vitesse) * Math.min(1, dt / CONFIG.lissageVitesse);
 
     for (let i = objets.length - 1; i >= 0; i--) {
       const o = objets[i];

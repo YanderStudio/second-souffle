@@ -9,9 +9,9 @@ import { creerPolluant, creerPoisson } from './entities.js';
 const entre = (a, b, p) => a + (b - a) * p;
 const auHasard = (min, max) => min + Math.random() * (max - min);
 
-/** Vitesse de chute et intervalle d'apparition selon le temps de jeu (hors pauses). */
-export function rythme(tempsJeu) {
-  const p = Math.min(1, tempsJeu / CONFIG.dureeAcceleration);
+/** Vitesse de chute et intervalle d'apparition selon le score (plus de points = plus rapide). */
+export function rythme(score) {
+  const p = Math.sqrt(Math.min(1, score / CONFIG.scoreVitesseMax));
   return {
     vitesse: entre(CONFIG.vitesseDepart, CONFIG.vitesseMax, p),
     intervalle: entre(CONFIG.intervalleDepart, CONFIG.intervalleMin, p),
@@ -27,22 +27,27 @@ export function creerSpawner(debloques) {
 
   let minuteur = CONFIG.intervalleDepart / 2; // premier polluant un peu après le départ
   let dernierX = CONFIG.carton.xDepart;
+  let precedent = null; // dernier polluant créé (sa position y est mise à jour par la boucle)
   let cotePoisson = 0; // côté du dernier poisson (-1 gauche, 1 droite, 0 aucun)
   let poissonsEnAttente = 0; // poissons tirés mais pas encore placés
 
   /** Avance le temps ; renvoie les nouveaux objets à ajouter à la scène. */
-  return function avancer(dt, tempsJeu) {
+  return function avancer(dt, score) {
     minuteur -= dt;
     if (minuteur > 0) return [];
-    const { intervalle } = rythme(tempsJeu);
-    minuteur += intervalle;
+    minuteur += rythme(score).intervalle;
 
     const ids = debloques();
     if (!ids.length) return [];
     const id = ids[Math.floor(Math.random() * ids.length)];
 
-    // Écart faisable avec le polluant précédent (petite marge de sécurité)
-    const ecartMax = CONFIG.vitesseCartonFaisable * intervalle * 0.9;
+    // Écart faisable avec le polluant précédent (petite marge de sécurité).
+    // Les deux tombent toujours à la même vitesse : l'écart vertical entre eux ne change plus.
+    // Le temps le plus court entre leurs arrivées = cet écart parcouru à la vitesse maximale
+    // (le score peut faire accélérer les objets déjà en chute).
+    const yNouveau = -CONFIG.taillesPolluants[id][1] / 2;
+    const ecartVertical = precedent ? precedent.y - yNouveau : Infinity;
+    const ecartMax = CONFIG.vitesseCartonFaisable * (ecartVertical / CONFIG.vitesseMax) * 0.9;
     let min = Math.max(xMin, dernierX - ecartMax);
     let max = Math.min(xMax, dernierX + ecartMax);
     // Ne pas obliger le carton à traverser le poisson de la rangée précédente
@@ -65,6 +70,7 @@ export function creerSpawner(debloques) {
       }
     }
     dernierX = x;
+    precedent = polluant;
     return nouveaux;
   };
 }

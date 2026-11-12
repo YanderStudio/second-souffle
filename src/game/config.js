@@ -26,13 +26,16 @@ export const CONFIG = {
   // Zones de collision : fraction de la taille de l'image (un peu plus petites)
   reductionCollision: 0.8,
 
-  // Vitesse de chute (px/s) et intervalle entre deux polluants (s),
-  // du départ jusqu'au plafond atteint après dureeAcceleration secondes de jeu
+  // Vitesse de chute (px/s) et intervalle entre deux polluants (s) : ils évoluent avec le SCORE,
+  // du départ jusqu'au plafond atteint à scoreVitesseMax points.
+  // Progression en racine carrée : les premiers points accélèrent nettement, puis la hausse ralentit.
   vitesseDepart: 180,
-  vitesseMax: 420,
+  vitesseMax: 650,
   intervalleDepart: 1.4,
-  intervalleMin: 0.55,
-  dureeAcceleration: 120,
+  intervalleMin: 0.4,
+  scoreVitesseMax: 40000,
+  // Temps (s) pour que la vitesse rejoigne sa nouvelle valeur après un ramassage (évite les à-coups)
+  lissageVitesse: 0.8,
 
   // Un poisson pour environ quatre polluants
   probabilitePoisson: 0.25,
