@@ -30,10 +30,10 @@ export const CONFIG = {
   // du départ jusqu'au plafond atteint à scoreVitesseMax points.
   // Progression en racine carrée : les premiers points accélèrent nettement, puis la hausse ralentit.
   vitesseDepart: 180,
-  vitesseMax: 650,
+  vitesseMax: 900,
   intervalleDepart: 1.4,
-  intervalleMin: 0.4,
-  scoreVitesseMax: 40000,
+  intervalleMin: 0.32,
+  scoreVitesseMax: 200000,
   // Temps (s) pour que la vitesse rejoigne sa nouvelle valeur après un ramassage (évite les à-coups)
   lissageVitesse: 0.8,
 

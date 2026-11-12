@@ -31,6 +31,16 @@ export function enregistrerDebloques(liste) {
   ecrire('debloques', liste);
 }
 
+/** Oublie les polluants débloqués et le tutoriel vu (bouton provisoire de l'accueil). */
+export function reinitialiserDeblocages() {
+  try {
+    localStorage.removeItem(PREFIXE + 'debloques');
+    localStorage.removeItem(PREFIXE + 'tutorielVu');
+  } catch {
+    /* stockage indisponible : rien à effacer */
+  }
+}
+
 /** Le tutoriel n'est affiché qu'une fois. */
 export function tutorielVu() {
   return lire('tutorielVu', false) === true;
