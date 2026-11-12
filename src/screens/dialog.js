@@ -22,7 +22,9 @@ export function entrer(racine, params) {
   const boucheOuverte = image(`${perso.bouche}-o.png`, 'perso perso--ouvert');
 
   const bulle = creer('div', params.polluantImage ? 'bulle bulle--polluant' : 'bulle');
-  const nom = creer('p', 'bulle__nom titre', perso.nom);
+  // Nom de famille affiché ou non selon textes.json (afficherNomFamille)
+  const nomAffiche = textes.afficherNomFamille ? `${perso.prenom} ${perso.nomFamille}` : perso.prenom;
+  const nom = creer('p', 'bulle__nom titre', nomAffiche);
   const texte = creer('p', 'bulle__texte');
   const fleche = creer('button', 'bulle__fleche');
   fleche.type = 'button';

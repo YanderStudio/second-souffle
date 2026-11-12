@@ -2,10 +2,11 @@
   "_note": "Textes de l'interface. Noms des personnages provisoires, à valider.",
   "vitesseLettres": 35,
   "alternanceBoucheMs": 130,
+  "afficherNomFamille": false,
   "personnages": {
-    "pull-creme": { "nom": "Léa MARTIN", "bouche": "/assets/personnages/pull-creme" },
-    "polo-gris": { "nom": "Karim BENALI", "bouche": "/assets/personnages/polo-gris" },
-    "salopette": { "nom": "Inès DIALLO", "bouche": "/assets/personnages/salopette" }
+    "pull-creme": { "prenom": "Léa", "nomFamille": "MARTIN", "bouche": "/assets/personnages/pull-creme" },
+    "polo-gris": { "prenom": "Karim", "nomFamille": "BENALI", "bouche": "/assets/personnages/polo-gris" },
+    "salopette": { "prenom": "Inès", "nomFamille": "DIALLO", "bouche": "/assets/personnages/salopette" }
   },
   "explication": {
     "personnage": "pull-creme",
