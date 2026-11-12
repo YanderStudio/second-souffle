@@ -32,6 +32,7 @@
   },
   "scanner": {
     "consigne": "Scannez un QR code",
+    "sansCamera": "Caméra indisponible : tapez le code du QR code.",
     "placeholder": "ou tapez le code",
     "fermer": "Fermer"
   }

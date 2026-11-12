@@ -1,14 +1,31 @@
-/* Écran Scanner (à créer) — fond noir comme l'export « Caméra QR Code.png » ;
-   champ et message dans le style de l'écran de fin, bloc ancré au milieu */
+/* Écran Scanner (à créer) — fond noir comme l'export « Caméra QR Code.png ».
+   Image de la caméra en plein écran ; consigne en haut, saisie et fermeture en bas
+   (le milieu reste libre pour viser le QR code). */
 .ecran-scanner {
   background: var(--noir);
+}
+
+.scanner-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sans-camera .scanner-video { display: none; }
+
+/* Textes lisibles par-dessus l'image de la caméra */
+.scanner-consigne,
+.scanner-message,
+.scanner-fermer {
+  text-shadow: 0 0 calc(6 * var(--u)) rgb(0 0 0 / 0.8);
 }
 
 .scanner-consigne {
   position: absolute;
   left: calc(21 * var(--u));
   right: calc(21 * var(--u));
-  top: calc(50% - 80 * var(--u));
+  top: calc(60 * var(--u));
   text-align: center;
   color: var(--blanc);
 }
@@ -17,7 +34,7 @@
 .scanner-code {
   position: absolute;
   left: calc(21 * var(--u));
-  top: calc(50% - 20 * var(--u));
+  top: calc(100% - (874 - 660) * var(--u));
   width: calc(360 * var(--u));
   height: calc(40 * var(--u));
   display: flex;
@@ -57,7 +74,7 @@
   position: absolute;
   left: calc(21 * var(--u));
   right: calc(21 * var(--u));
-  top: calc(50% + 31 * var(--u));
+  top: calc(100% - (874 - 711) * var(--u));
   text-align: center;
   font-size: calc(15 * var(--u));
   line-height: calc(17 * var(--u));
