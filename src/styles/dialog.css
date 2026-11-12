@@ -4,7 +4,9 @@
 .perso {
   position: absolute;
   left: calc(var(--perso-x) * var(--u));
-  top: calc(var(--perso-y) * var(--u)); /* ancré en haut : ne bouge jamais d'un texte à l'autre */
+  /* Ancré en haut, à la même proportion de hauteur d'écran que la maquette (172,6 / 874) :
+     ne bouge jamais d'un texte à l'autre, et remonte sur les écrans courts */
+  top: calc(var(--perso-y) / 874 * 100%);
   width: calc(var(--perso-l) * var(--u));
   pointer-events: none;
 }
