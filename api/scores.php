@@ -26,11 +26,12 @@ if (exigerMethode('GET', 'POST') === 'GET') {
 }
 
 limiterIp('scores', 120);
-$corps = lireCorpsJson(['game_token', 'pseudo', 'counts']);
+$corps = lireCorpsJson(['game_token', 'pseudo', 'counts', 'duree']);
 $jeton = exigerIdentifiant($corps['game_token']);
 $pseudo = validerPseudo($corps['pseudo']); // erreur ici : le jeton reste valable, le joueur corrige
 $points = pointsPolluants();
 $compteurs = validerCompteurs($corps['counts'], array_keys($points));
+$dureeJeu = validerDuree($corps['duree']); // temps de jeu hors pauses, annoncé par le jeu
 
 $refus = fn () => erreur(422, 'Partie refusée.');
 
@@ -54,9 +55,9 @@ $requete = db()->prepare(
 );
 $requete->execute([$jeton]);
 $partie = $requete->fetch();
-$duree = (float) $partie['duree'];
+$dureeReelle = (float) $partie['duree']; // mesurée par le serveur, pauses comprises
 
-// Contrôles : polluants débloqués, durée plausible, pas plus de ramassages que d'apparitions possibles
+// Contrôles : polluants débloqués, durées plausibles, pas plus de ramassages que d'apparitions possibles
 $debloques = debloquesDuJoueur($joueur);
 $total = 0;
 $score = 0;
@@ -67,7 +68,12 @@ foreach ($compteurs as $id => $nombre) {
     $total += $nombre;
     $score += $nombre * $points[$id];
 }
-if ($duree < DUREE_MIN || $duree > DUREE_MAX || $total > ramassagesPossibles($duree)) {
+// Le temps de jeu annoncé ne peut pas dépasser le temps réellement écoulé depuis le jeton ;
+// les pauses (scanner, fiche, téléphone en poche) ne comptent pas, dans la limite de validité du jeton
+if ($dureeJeu < DUREE_JEU_MIN
+    || $dureeJeu > $dureeReelle + MARGE_HORLOGE
+    || $dureeReelle > VALIDITE_JETON
+    || $total > ramassagesPossibles($dureeJeu)) {
     $refus();
 }
 

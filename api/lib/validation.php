@@ -119,6 +119,15 @@ function simplifier(string $texte): string
     return strtr($texte, ['œ' => 'oe', 'æ' => 'ae', 'ß' => 'ss']);
 }
 
+/** Temps de jeu en secondes (nombre, entier ou décimal), borné par DUREE_JEU_MAX. */
+function validerDuree(mixed $valeur): float
+{
+    if ((!is_int($valeur) && !is_float($valeur)) || $valeur < 0 || $valeur > DUREE_JEU_MAX) {
+        erreur(400, 'Durée invalide.');
+    }
+    return (float) $valeur;
+}
+
 /** Compteurs de ramassage {"p1": 12, ...} : ids connus, entiers positifs ou nuls. */
 function validerCompteurs(mixed $valeur, array $idsConnus): array
 {

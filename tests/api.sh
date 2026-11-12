@@ -6,6 +6,7 @@
 
 API="${1:-http://localhost/second-souffle/api}"
 PHP="${PHP:-/c/wamp64/bin/php/php8.0.30/php.exe}"
+MYSQL="${MYSQL:-/c/wamp64/bin/mysql/mysql8.3.0/bin/mysql.exe}" # sert à simuler une longue pause
 RACINE="$(cd "$(dirname "$0")/.." && pwd)"
 
 # Les vrais codes ne sont écrits que dans api/config.php : on les y lit (C1 = code de p1, etc.)
@@ -52,42 +53,57 @@ requete POST unlocks.php "{\"player_id\":\"$J\",\"code\":\"$C3\"}"; verifier "co
 requete POST games.php "{\"player_id\":\"$J\"}"; verifier "début de partie" 200 game_token
 T=$(champ game_token)
 echo "   (attente de 4,5 s : durée minimale d'une partie)"; sleep 4.5
-requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"  Test Élodie \",\"counts\":{\"p1\":3,\"p3\":1}}"
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"  Test Élodie \",\"counts\":{\"p1\":3,\"p3\":1},\"duree\":4.2}"
 verifier "score calculé par le serveur (3×50 + 1000)" 200 '"score":1150'
 requete GET scores.php; verifier "classement contient le pseudo (espaces retirés)" 200 '"pseudo":"Test Élodie","score":1150'
 
 echo "== Jeton réutilisé"
-requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test\",\"counts\":{\"p1\":1}}"; verifier "même jeton une 2e fois" 422
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test\",\"counts\":{\"p1\":1},\"duree\":4.2}"; verifier "même jeton une 2e fois" 422
 
 echo "== Injection SQL"
-requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"x'; DROP TABLE games;--\",\"counts\":{}}"; verifier "pseudo avec SQL" 400
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"x'; DROP TABLE games;--\",\"counts\":{},\"duree\":4.2}"; verifier "pseudo avec SQL" 400
 requete POST unlocks.php "{\"player_id\":\"$J\",\"code\":\"' OR 1=1 --\"}"; verifier "code avec SQL" 404
 requete POST games.php "{\"player_id\":\"' OR '1'='1\"}"; verifier "player_id avec SQL" 400
-requete POST scores.php "{\"game_token\":\"x' OR 1=1 #\",\"pseudo\":\"Test\",\"counts\":{}}"; verifier "jeton avec SQL" 400
+requete POST scores.php "{\"game_token\":\"x' OR 1=1 #\",\"pseudo\":\"Test\",\"counts\":{},\"duree\":4.2}"; verifier "jeton avec SQL" 400
 requete GET scores.php; verifier "tables intactes (classement lisible)" 200 '"scores"'
 
 echo "== Pseudo"
-requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"<script>alert(1)</script>\",\"counts\":{}}"; verifier "pseudo avec balises" 400
-requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"ab\",\"counts\":{}}"; verifier "pseudo trop court" 400
-requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Super-CONNÂRD\",\"counts\":{}}"; verifier "mot interdit (accents, majuscules, collé)" 400 refus
-requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test Unique\",\"counts\":{}}"; verifier "« Unique » accepté (nique seulement en mot entier)" 422
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"<script>alert(1)</script>\",\"counts\":{},\"duree\":4.2}"; verifier "pseudo avec balises" 400
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"ab\",\"counts\":{},\"duree\":4.2}"; verifier "pseudo trop court" 400
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Super-CONNÂRD\",\"counts\":{},\"duree\":4.2}"; verifier "mot interdit (accents, majuscules, collé)" 400 refus
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test Unique\",\"counts\":{},\"duree\":4.2}"; verifier "« Unique » accepté (nique seulement en mot entier)" 422
 
 echo "== Score impossible"
 J2=$(nouveau_joueur)
 requete POST unlocks.php "{\"player_id\":\"$J2\",\"code\":\"$C1\"}"
 requete POST games.php "{\"player_id\":\"$J2\"}"; T2=$(champ game_token)
-requete POST scores.php "{\"game_token\":\"$T2\",\"pseudo\":\"Test\",\"counts\":{\"p1\":1}}"; verifier "partie trop courte (< 4 s)" 422
+requete POST scores.php "{\"game_token\":\"$T2\",\"pseudo\":\"Test\",\"counts\":{\"p1\":1},\"duree\":1}"; verifier "temps de jeu < 4 s" 422
 requete POST games.php "{\"player_id\":\"$J2\"}"; T3=$(champ game_token)
 requete POST games.php "{\"player_id\":\"$J2\"}"; T4=$(champ game_token)
 sleep 4.5
-requete POST scores.php "{\"game_token\":\"$T3\",\"pseudo\":\"Test\",\"counts\":{\"p1\":100000}}"; verifier "100 000 ramassages en 4 s" 422
-requete POST scores.php "{\"game_token\":\"$T4\",\"pseudo\":\"Test\",\"counts\":{\"p5\":1}}"; verifier "polluant non débloqué (p5)" 422
+requete POST scores.php "{\"game_token\":\"$T3\",\"pseudo\":\"Test\",\"counts\":{\"p1\":100000},\"duree\":4.2}"; verifier "100 000 ramassages en 4 s" 422
+requete POST scores.php "{\"game_token\":\"$T4\",\"pseudo\":\"Test\",\"counts\":{\"p5\":1},\"duree\":4.2}"; verifier "polluant non débloqué (p5)" 422
 requete POST games.php "{\"player_id\":\"$J2\"}"; T5=$(champ game_token)
-requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{\"p1\":-1}}"; verifier "compteur négatif" 400
-requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{\"p1\":1.5}}"; verifier "compteur décimal" 400
-requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{\"p1\":\"3\"}}"; verifier "compteur en texte" 400
-requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{\"p9\":1}}"; verifier "polluant inconnu" 400
-requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{},\"score\":999999}"; verifier "score envoyé par le client : champ refusé" 400
+requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{\"p1\":-1},\"duree\":4.2}"; verifier "compteur négatif" 400
+requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{\"p1\":1.5},\"duree\":4.2}"; verifier "compteur décimal" 400
+requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{\"p1\":\"3\"},\"duree\":4.2}"; verifier "compteur en texte" 400
+requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{\"p9\":1},\"duree\":4.2}"; verifier "polluant inconnu" 400
+requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{},\"duree\":4.2,\"score\":999999}"; verifier "score envoyé par le client : champ refusé" 400
+requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{}}"; verifier "temps de jeu absent" 400
+requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{},\"duree\":\"12\"}"; verifier "temps de jeu en texte" 400
+requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{},\"duree\":-5}"; verifier "temps de jeu négatif" 400
+requete POST scores.php "{\"game_token\":\"$T5\",\"pseudo\":\"Test\",\"counts\":{\"p1\":1},\"duree\":60}"; verifier "60 s de jeu annoncées, 0 s écoulée" 422
+
+echo "== Pauses (temps réel simulé en reculant le début de partie dans la base)"
+requete POST games.php "{\"player_id\":\"$J2\"}"; T6=$(champ game_token)
+"$MYSQL" -uroot second_souffle -e "UPDATE games SET started_at = NOW(3) - INTERVAL 2 HOUR WHERE token = '$T6'"
+requete POST scores.php "{\"game_token\":\"$T6\",\"pseudo\":\"Test Pause\",\"counts\":{\"p1\":40},\"duree\":90}"; verifier "90 s de jeu après 2 h en poche : accepté" 200 '"score":2000'
+requete POST games.php "{\"player_id\":\"$J2\"}"; T7=$(champ game_token)
+"$MYSQL" -uroot second_souffle -e "UPDATE games SET started_at = NOW(3) - INTERVAL 25 HOUR WHERE token = '$T7'"
+requete POST scores.php "{\"game_token\":\"$T7\",\"pseudo\":\"Test\",\"counts\":{\"p1\":40},\"duree\":90}"; verifier "jeton de plus de 24 h : refusé" 422
+requete POST games.php "{\"player_id\":\"$J2\"}"; T8=$(champ game_token)
+"$MYSQL" -uroot second_souffle -e "UPDATE games SET started_at = NOW(3) - INTERVAL 2 HOUR WHERE token = '$T8'"
+requete POST scores.php "{\"game_token\":\"$T8\",\"pseudo\":\"Test\",\"counts\":{\"p1\":400},\"duree\":90}"; verifier "400 ramassages en 90 s de jeu : refusé" 422
 
 echo "== Code faux, p1 manquant"
 J3=$(nouveau_joueur)

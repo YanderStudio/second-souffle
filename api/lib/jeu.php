@@ -6,9 +6,12 @@ declare(strict_types=1);
 
 // Intervalle minimal entre deux apparitions (= intervalleMin de game/config.js), en secondes
 const INTERVALLE_MIN = 0.32;
-// Durée de partie acceptée, pauses comprises (mesurée par le serveur entre le jeton et le score)
-const DUREE_MIN = 4.0;    // un premier polluant met plus de 4 s à atteindre le rail
-const DUREE_MAX = 7200.0; // 2 heures
+// Temps de jeu (hors pauses), annoncé par le jeu et borné par le serveur
+const DUREE_JEU_MIN = 4.0;     // un premier polluant met plus de 4 s à atteindre le rail
+const DUREE_JEU_MAX = 7200.0;  // 2 heures de jeu effectif
+const MARGE_HORLOGE = 2.0;     // s : écart toléré entre l'horloge du jeu et celle du serveur
+// Temps réel maximal entre le début de partie et l'envoi du score, pauses comprises
+const VALIDITE_JETON = 86400.0; // 24 heures
 // Marge sur le nombre d'apparitions possibles
 const MARGE_APPARITIONS = 1.2;
 
