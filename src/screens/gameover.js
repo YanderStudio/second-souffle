@@ -1,16 +1,29 @@
-// Écrans de fin : saisie du pseudo, puis récapitulatif (pseudo et score)
-import { creer, image, boutonIcone, auToucher } from './ui.js';
+// Écrans de fin : saisie du pseudo, puis récapitulatif (pseudo et score), chacun avec le top 5
+import { creer, image, boutonIcone, auToucher, formaterScore, ligneScore } from './ui.js';
 import textes from '../data/textes.json';
 import '../styles/gameover.css';
 
 const MOTIF_PSEUDO = /^[\p{L}\p{N} _-]{3,15}$/u; // même règle que le serveur
 const t = textes.fin;
 
-/** Score affiché avec séparateur de milliers français. */
-export const formaterScore = (n) => Number(n).toLocaleString('fr-FR');
+/**
+ * Bloc « Top 5 » : place réservée tout de suite (pas de saut de mise en page),
+ * lignes ajoutées quand le classement arrive ; message si le serveur ne répond pas.
+ */
+function blocTop5(chargement) {
+  const bloc = creer('div', 'fin-top5');
+  const liste = creer('ol', 'fin-top5__liste');
+  bloc.append(creer('p', 'fin-top5__titre titre', t.top5), liste);
+  chargement.then((reponse) => {
+    if (reponse.ok) liste.append(...reponse.lignes.slice(0, 5).map(({ pseudo, score }) => ligneScore(pseudo, score)));
+    else liste.append(creer('li', 'fin-top5__message', textes.erreurs.classement));
+  });
+  return bloc;
+}
 
 /**
- * params : { score, pseudoInitial?, enregistrer(pseudo) → Promise<{ok, message?}>, accueil() }
+ * params : { score, pseudoInitial?, enregistrer(pseudo) → Promise<{ok, message?, peutQuitter?}>,
+ *            classement() → Promise<{ ok, lignes? }>, accueil() }
  */
 export function entrer(racine, params) {
   const ecran = creer('section', 'ecran ecran-fin ecran-fin--saisie');
@@ -36,7 +49,15 @@ export function entrer(racine, params) {
   message.setAttribute('role', 'alert');
   const accueil = boutonIcone('bouton-accueil est-inactif', '/assets/icons/bouton-accueil.svg', 'Accueil');
 
-  ecran.append(creer('p', 'fin-perdu titre', t.perdu), carte, creer('p', 'fin-label titre', t.pseudo), formulaire, message, accueil);
+  ecran.append(
+    creer('p', 'fin-perdu titre', t.perdu),
+    carte,
+    blocTop5(params.classement()),
+    creer('p', 'fin-label titre', t.pseudo),
+    formulaire,
+    message,
+    accueil,
+  );
   racine.append(ecran);
 
   let enCours = false;
@@ -69,7 +90,7 @@ export function entrer(racine, params) {
   });
 }
 
-/** Récapitulatif : pseudo et score, Accueil actif. */
+/** Récapitulatif : pseudo et score, top 5 relu (il inclut le score enregistré), Accueil actif. */
 function afficherRecap(racine, params, pseudo) {
   const ecran = creer('section', 'ecran ecran-fin ecran-fin--recap');
   const ligne = creer('p', 'fin-carte__ligne');
@@ -82,7 +103,7 @@ function afficherRecap(racine, params, pseudo) {
   carte.append(creer('p', 'fin-carte__titre titre', t.scoreFinal), ligne, image('/assets/images/corail.png', 'corail fin-carte__corail'));
   const accueil = boutonIcone('bouton-accueil', '/assets/icons/bouton-accueil.svg', 'Accueil');
   auToucher(accueil, () => params.accueil());
-  ecran.append(creer('p', 'fin-perdu titre', t.perdu), carte, accueil);
+  ecran.append(creer('p', 'fin-perdu titre', t.perdu), carte, blocTop5(params.classement()), accueil);
   racine.replaceChildren(ecran);
 }
 

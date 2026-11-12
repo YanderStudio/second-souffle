@@ -25,6 +25,16 @@ export function boutonIcone(classe, icone, libelle) {
   return bouton;
 }
 
+/** Score affiché avec séparateur de milliers français. */
+export const formaterScore = (n) => Number(n).toLocaleString('fr-FR');
+
+/** Ligne de classement « pseudo ........ score » (classement et top 5 de fin). */
+export function ligneScore(pseudo, score) {
+  const ligne = creer('li', 'scores-ligne');
+  ligne.append(creer('span', '', pseudo), creer('span', 'pointilles', '.'.repeat(80)), creer('span', 'scores-ligne__score', formaterScore(score)));
+  return ligne;
+}
+
 /** Associe une action au relâchement du pointeur (souris et tactile). */
 export function auToucher(el, action) {
   el.addEventListener('pointerup', (e) => {

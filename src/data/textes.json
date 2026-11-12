@@ -18,6 +18,7 @@
   },
   "fin": {
     "perdu": "Perdu !",
+    "top5": "Top 5",
     "scoreFinal": "Score final :",
     "pseudo": "Pseudo :",
     "pseudoManquant": "Pseudo manquant : entrez votre pseudo.",

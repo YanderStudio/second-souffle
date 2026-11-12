@@ -16,12 +16,7 @@
   line-height: calc(23 * var(--u));
 }
 
-.scores-ligne {
-  display: flex;
-  white-space: nowrap;
-}
-
-.scores-ligne__score { color: var(--orange); }
+/* Lignes « pseudo ..... score » : voir .scores-ligne dans base.css (communes au top 5 de fin) */
 
 /* Message si le classement n'a pas pu être lu (à la place de la liste) */
 .scores-message {

@@ -1,4 +1,4 @@
-/* Écrans de fin — Ecran_de_fin_Username.png et Ecran_de_fin.png
+/* Écrans de fin — Ecran_de_fin_Username.png et Ecran_de_fin.png, blocs remontés pour le top 5 (demandé)
    Bloc central ancré au milieu de l'écran : top = 50 % + (Y - 437) u */
 
 .fin-perdu,
@@ -9,9 +9,9 @@
   text-align: center;
   color: var(--blanc);
 }
-.ecran-fin--saisie .fin-perdu { top: calc(50% + (309.5 - 437) * var(--u)); }
-.ecran-fin--recap .fin-perdu { top: calc(50% + (289.5 - 437) * var(--u)); }
-.fin-label { top: calc(50% + (478.5 - 437) * var(--u)); }
+.ecran-fin--saisie .fin-perdu { top: calc(50% + (128 - 437) * var(--u)); }
+.ecran-fin--recap .fin-perdu { top: calc(50% + (265 - 437) * var(--u)); }
+.fin-label { top: calc(50% + (464 - 437) * var(--u)); }
 
 /* Carte « Score final » */
 .fin-carte {
@@ -23,8 +23,8 @@
   background: var(--bulle);
   border-radius: var(--rayon-bulle);
 }
-.ecran-fin--saisie .fin-carte { top: calc(50% + (357 - 437) * var(--u)); }
-.ecran-fin--recap .fin-carte { top: calc(50% + (363 - 437) * var(--u)); }
+.ecran-fin--saisie .fin-carte { top: calc(50% + (176 - 437) * var(--u)); }
+.ecran-fin--recap .fin-carte { top: calc(50% + (313 - 437) * var(--u)); }
 
 .fin-carte__titre { color: var(--orange); }
 
@@ -53,7 +53,7 @@
 .fin-pseudo {
   position: absolute;
   left: calc(21 * var(--u));
-  top: calc(50% + (526 - 437) * var(--u));
+  top: calc(50% + (511.5 - 437) * var(--u));
   width: calc(360 * var(--u));
   height: calc(40 * var(--u));
   display: flex;
@@ -88,8 +88,32 @@
   position: absolute;
   left: calc(21 * var(--u));
   right: calc(21 * var(--u));
-  top: calc(50% + (577 - 437) * var(--u));
+  top: calc(50% + (562.5 - 437) * var(--u));
   text-align: center;
+  font-size: calc(15 * var(--u));
+  line-height: calc(17 * var(--u));
+  color: var(--orange);
+}
+
+/* Top 5 : même présentation que le classement (titre orange, pseudo ..... score) */
+.fin-top5 {
+  position: absolute;
+  left: calc(64 * var(--u));
+  width: calc(273 * var(--u));
+}
+.ecran-fin--saisie .fin-top5 { top: calc(50% + (300 - 437) * var(--u)); }
+.ecran-fin--recap .fin-top5 { top: calc(50% + (440 - 437) * var(--u)); }
+
+.fin-top5__titre { color: var(--orange); }
+
+.fin-top5__liste {
+  margin-top: calc(8 * var(--u));
+  list-style: none;
+  font-size: calc(20 * var(--u));
+  line-height: calc(23 * var(--u));
+}
+
+.fin-top5__message {
   font-size: calc(15 * var(--u));
   line-height: calc(17 * var(--u));
   color: var(--orange);

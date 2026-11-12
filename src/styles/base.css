@@ -160,6 +160,13 @@ button {
   pointer-events: none;
 }
 
+/* Ligne de classement « pseudo ..... score » (classement et top 5 des écrans de fin) */
+.scores-ligne {
+  display: flex;
+  white-space: nowrap;
+}
+.scores-ligne__score { color: var(--orange); }
+
 /* Pointillés de remplissage entre un pseudo et un score */
 .pointilles {
   flex: 1;

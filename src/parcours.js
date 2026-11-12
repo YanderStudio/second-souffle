@@ -123,6 +123,11 @@ function versFin(bilan, jetonPartie) {
       }
       return { ok: false, message: reponse.message, peutQuitter: reponse.statut !== 400 };
     },
+    // Top 5 des écrans de fin (relu à l'ouverture de chaque écran)
+    classement: async () => {
+      const reponse = await api.lireClassement();
+      return reponse.ok ? { ok: true, lignes: reponse.scores } : { ok: false };
+    },
     accueil: versAccueil,
   });
 }
