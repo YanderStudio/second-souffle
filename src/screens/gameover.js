@@ -3,7 +3,7 @@ import { creer, image, boutonIcone, auToucher, formaterScore, ligneScore } from 
 import textes from '../data/textes.json';
 import '../styles/gameover.css';
 
-const MOTIF_PSEUDO = /^[\p{L}\p{N} _-]{3,15}$/u; // même règle que le serveur
+const MOTIF_PSEUDO = /^[\p{L}\p{N} _=\}\]>-]{3,15}$/u; // même règle que le serveur
 const t = textes.fin;
 
 /**
