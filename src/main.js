@@ -19,3 +19,5 @@ enregistrer('fin', fin);
 enregistrer('classement', classement);
 
 versAccueil();
+// Images lourdes des personnages chargées dès le lancement, sans retarder l'accueil
+dialogue.prechargerPersonnages();

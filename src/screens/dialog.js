@@ -6,6 +6,18 @@ import textes from '../data/textes.json';
 import '../styles/dialog.css';
 
 let arreter = null;
+const imagesPrechargees = []; // gardées en mémoire pour un affichage immédiat
+
+/** Précharge les images des personnages (bouches ouvertes et fermées) en arrière-plan. */
+export function prechargerPersonnages() {
+  for (const perso of Object.values(textes.personnages)) {
+    for (const bouche of ['c', 'o']) {
+      const img = new Image();
+      img.src = `${perso.bouche}-${bouche}.png`;
+      imagesPrechargees.push(img);
+    }
+  }
+}
 
 /**
  * params : { personnage, texte, polluantImage?, suivant }

@@ -4,7 +4,7 @@
 .perso {
   position: absolute;
   left: calc(var(--perso-x) * var(--u));
-  top: calc(100% - (874 - var(--perso-y)) * var(--u));
+  top: calc(var(--perso-y) * var(--u)); /* ancré en haut : ne bouge jamais d'un texte à l'autre */
   width: calc(var(--perso-l) * var(--u));
   pointer-events: none;
 }
