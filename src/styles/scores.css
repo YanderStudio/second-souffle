@@ -22,3 +22,14 @@
 }
 
 .scores-ligne__score { color: var(--orange); }
+
+/* Message si le classement n'a pas pu être lu (à la place de la liste) */
+.scores-message {
+  position: absolute;
+  left: calc(64 * var(--u));
+  top: calc(50% + (330.8 - 437) * var(--u));
+  width: calc(273 * var(--u));
+  font-size: calc(15 * var(--u));
+  line-height: calc(17 * var(--u));
+  color: var(--orange);
+}

@@ -31,11 +31,23 @@ export function enregistrerDebloques(liste) {
   ecrire('debloques', liste);
 }
 
-/** Oublie les polluants débloqués et le tutoriel vu (bouton provisoire de l'accueil). */
+/** Identifiant du joueur créé par le serveur (null s'il n'existe pas encore). */
+export function lireJoueur() {
+  const id = lire('joueur', null);
+  return typeof id === 'string' && /^[0-9a-f]{32}$/.test(id) ? id : null;
+}
+
+export function enregistrerJoueur(id) {
+  ecrire('joueur', id);
+}
+
+/**
+ * Oublie le joueur, ses polluants débloqués et le tutoriel vu : le navigateur redevient un nouveau joueur
+ * (bouton provisoire de l'accueil, ou joueur inconnu du serveur). Le dernier pseudo est gardé.
+ */
 export function reinitialiserDeblocages() {
   try {
-    localStorage.removeItem(PREFIXE + 'debloques');
-    localStorage.removeItem(PREFIXE + 'tutorielVu');
+    for (const cle of ['joueur', 'debloques', 'tutorielVu']) localStorage.removeItem(PREFIXE + cle);
   } catch {
     /* stockage indisponible : rien à effacer */
   }

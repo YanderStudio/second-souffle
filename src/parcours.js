@@ -6,17 +6,16 @@
 import { aller } from './router.js';
 import { creerPartie } from './game/loop.js';
 import { prechargerImages } from './game/entities.js';
-import { debloquer } from './services/api.js';
+import * as api from './services/api.js';
 import { play } from './services/audio.js';
 import * as stockage from './services/storage.js';
 import textes from './data/textes.json';
 import { polluants } from './data/polluants.json';
 
-// Classement fictif jusqu'au branchement de l'API (phase 6)
-const SCORES_FICTIFS = Array.from({ length: 10 }, (_, i) => ({ pseudo: `Joueur ${i + 1}`, score: 12000 - i * 1150 }));
-
 // Partie en cours, conservée pendant le scanner et la fiche ; null hors partie
 let partie = null;
+let jeton = null; // jeton de la partie en cours (null si le serveur était injoignable au départ)
+let demarrage = false; // évite de lancer deux parties sur un double appui
 
 const p1Debloque = () => stockage.lireDebloques().includes('p1');
 
@@ -25,8 +24,14 @@ export function versAccueil() {
   aller('accueil', { jouer: () => (p1Debloque() ? nouvellePartie() : versExplication()), scores: versClassement });
 }
 
-function versClassement() {
-  aller('classement', { lignes: SCORES_FICTIFS, accueil: versAccueil });
+/** Classement partagé lu sur le serveur ; en cas d'échec, liste vide et message. */
+async function versClassement() {
+  const reponse = await api.lireClassement();
+  aller('classement', {
+    lignes: reponse.ok ? reponse.scores : [],
+    message: reponse.ok ? '' : textes.erreurs.classement,
+    accueil: versAccueil,
+  });
 }
 
 function versExplication() {
@@ -38,7 +43,7 @@ function versScanner() {
   aller('scanner', {
     valider: async (code) => {
       const avant = stockage.lireDebloques();
-      const reponse = await debloquer(code);
+      const reponse = await api.debloquer(code);
       if (reponse.ok) apresDeblocage(reponse.polluant_id, !avant.includes(reponse.polluant_id));
       return reponse;
     },
@@ -70,13 +75,26 @@ function versFiche(id) {
 }
 
 async function nouvellePartie() {
+  if (demarrage) return;
   if (!p1Debloque()) return versExplication();
-  await prechargerImages().catch(() => {}); // une image manquante ne bloque pas le joueur
+  demarrage = true;
+  const [reponse] = await Promise.all([api.commencerPartie(), prechargerImages().catch(() => {})]);
+  demarrage = false;
+
+  // Le serveur (la référence) dit que p1 n'est pas débloqué : le cache local était faux
+  if (!reponse.ok && reponse.statut === 403) {
+    stockage.enregistrerDebloques([]);
+    return versExplication();
+  }
+  // Serveur injoignable : on joue quand même, le score ne pourra pas être enregistré
+  jeton = reponse.ok ? reponse.game_token : null;
+  if (!p1Debloque()) return versExplication(); // joueur recréé par le serveur entre-temps
+
   partie = creerPartie({
     debloques: stockage.lireDebloques, // relu à chaque apparition : un déblocage en jeu compte dès la reprise
     surDefaite: (bilan) => {
       partie = null;
-      versFin(bilan.score);
+      versFin(bilan, jeton);
     },
   });
   versJeu();
@@ -86,14 +104,24 @@ function versJeu() {
   aller('jeu', { partie, scanner: versScanner });
 }
 
-function versFin(score) {
+/**
+ * Fin de partie : le score affiché est celui du jeu ; le serveur recalcule et enregistre.
+ * En cas d'échec, le joueur peut réessayer ou revenir à l'accueil (peutQuitter),
+ * sauf pseudo refusé (400) : il le corrige.
+ */
+function versFin(bilan, jetonPartie) {
   aller('fin', {
-    score,
+    score: bilan.score,
     pseudoInitial: stockage.lireDernierPseudo(),
-    // Envoi simulé jusqu'à la phase 6 ; le pseudo est retenu pour la prochaine fois
     enregistrer: async (pseudo) => {
-      stockage.enregistrerDernierPseudo(pseudo);
-      return { ok: true };
+      if (!jetonPartie) return { ok: false, message: textes.erreurs.scoreNonEnregistre, peutQuitter: true };
+      const duree = Math.round(bilan.duree * 1000) / 1000; // temps de jeu hors pauses (s)
+      const reponse = await api.envoyerScore(jetonPartie, pseudo, bilan.compteurs, duree);
+      if (reponse.ok) {
+        stockage.enregistrerDernierPseudo(pseudo); // pré-rempli la prochaine fois
+        return { ok: true };
+      }
+      return { ok: false, message: reponse.message, peutQuitter: reponse.statut !== 400 };
     },
     accueil: versAccueil,
   });

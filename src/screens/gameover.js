@@ -40,6 +40,7 @@ export function entrer(racine, params) {
   racine.append(ecran);
 
   let enCours = false;
+  let peutQuitter = false; // devient vrai si l'envoi échoue : le joueur n'est jamais bloqué
   // Entrée (submit du formulaire) ou bouton Play : valide le pseudo
   formulaire.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -51,12 +52,18 @@ export function entrer(racine, params) {
     message.textContent = '';
     const reponse = await params.enregistrer(pseudo);
     enCours = false;
-    if (reponse.ok) afficherRecap(racine, params, pseudo);
-    else message.textContent = reponse.message;
+    if (reponse.ok) return afficherRecap(racine, params, pseudo);
+    message.textContent = reponse.message;
+    // Échec d'envoi (hors pseudo refusé) : réessayer reste possible, Accueil devient actif
+    if (reponse.peutQuitter) {
+      peutQuitter = true;
+      accueil.classList.remove('est-inactif');
+    }
   });
 
-  // Accueil inactif tant que le pseudo n'est pas enregistré
+  // Accueil inactif tant que le pseudo n'est pas enregistré (sauf échec d'envoi)
   auToucher(accueil, () => {
+    if (peutQuitter) return params.accueil();
     message.textContent = t.pseudoManquant;
     champ.focus();
   });

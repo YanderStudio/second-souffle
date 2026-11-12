@@ -1,27 +1,79 @@
-// Accès au serveur. Phase 4 : déblocage SIMULÉ, sans serveur (remplacé par POST /api/unlocks.php en phase 6).
-// Les vrais codes restent côté serveur (api/config.php) : la simulation accepte P1 à P5.
-import { lireDebloques, enregistrerDebloques } from './storage.js';
+// Accès au serveur : tous les appels passent ici (délai maximal et gestion d'erreur communs).
+// Chaque fonction renvoie { ok: true, ...données } ou { ok: false, statut, message } — jamais d'exception.
+// statut 0 = serveur injoignable ou trop lent.
+import * as stockage from './storage.js';
+import textes from '../data/textes.json';
 
-/** Normalise une saisie : insensible à la casse, espaces ignorés. */
-export function normaliserCode(saisie) {
-  return String(saisie).replace(/\s+/g, '').toUpperCase();
+const DELAI_MAX = 8000; // ms
+const t = textes.erreurs;
+// Message renvoyé par l'API quand le player_id n'existe pas (base réinitialisée)
+const JOUEUR_INCONNU = 'Joueur inconnu.';
+
+/** Appel JSON vers /api/… avec délai maximal. */
+async function appeler(methode, route, corps) {
+  const controleur = new AbortController();
+  const minuterie = setTimeout(() => controleur.abort(), DELAI_MAX);
+  try {
+    const reponse = await fetch(`/api/${route}`, {
+      method: methode,
+      headers: corps ? { 'Content-Type': 'application/json' } : {},
+      body: corps ? JSON.stringify(corps) : undefined,
+      signal: controleur.signal,
+    });
+    const donnees = await reponse.json().catch(() => ({}));
+    if (reponse.ok) return { ok: true, ...donnees };
+    const message = typeof donnees.erreur === 'string' ? donnees.erreur : t.serveur;
+    return { ok: false, statut: reponse.status, message };
+  } catch {
+    return { ok: false, statut: 0, message: t.injoignable };
+  } finally {
+    clearTimeout(minuterie);
+  }
+}
+
+/** player_id du navigateur, créé par le serveur au premier besoin. */
+async function joueur() {
+  const existant = stockage.lireJoueur();
+  if (existant) return { ok: true, id: existant };
+  const reponse = await appeler('POST', 'players.php');
+  if (!reponse.ok) return reponse;
+  stockage.enregistrerJoueur(reponse.player_id);
+  return { ok: true, id: reponse.player_id };
 }
 
 /**
- * Débloque le polluant correspondant au code.
- * Réponse calquée sur l'API : { ok: true, polluant_id, unlocked } ou { ok: false, statut, message }.
+ * Appel au nom du joueur. Si le serveur ne le connaît plus (base vidée), le navigateur redevient
+ * un nouveau joueur : ses déblocages en cache sont oubliés, puis l'appel est refait une fois.
  */
-export async function debloquer(saisie) {
-  const code = normaliserCode(saisie);
-  const trouve = /^P([1-5])$/.exec(code);
-  if (!trouve) return { ok: false, statut: 404, message: 'Code inconnu.' };
-
-  const id = `p${trouve[1]}`;
-  const debloques = lireDebloques();
-  if (id !== 'p1' && !debloques.includes('p1')) {
-    return { ok: false, statut: 409, message: 'Scannez d’abord le premier QR code' };
+async function appelerCommeJoueur(route, champs) {
+  for (let essai = 0; essai < 2; essai++) {
+    const j = await joueur();
+    if (!j.ok) return j;
+    const reponse = await appeler('POST', route, { player_id: j.id, ...champs });
+    if (reponse.ok || reponse.statut !== 400 || reponse.message !== JOUEUR_INCONNU) return reponse;
+    stockage.reinitialiserDeblocages();
   }
-  const unlocked = debloques.includes(id) ? debloques : [...debloques, id];
-  enregistrerDebloques(unlocked); // cache local de la liste renvoyée
-  return { ok: true, polluant_id: id, unlocked };
+  return { ok: false, statut: 400, message: t.serveur };
+}
+
+/** Débloque un polluant avec le code saisi ou scanné ; met à jour le cache local des déblocages. */
+export async function debloquer(code) {
+  const reponse = await appelerCommeJoueur('unlocks.php', { code: String(code) });
+  if (reponse.ok) stockage.enregistrerDebloques(reponse.unlocked);
+  return reponse;
+}
+
+/** Jeton à usage unique d'une nouvelle partie. 403 : p1 non débloqué selon le serveur. */
+export async function commencerPartie() {
+  return appelerCommeJoueur('games.php', {});
+}
+
+/** Envoie la partie ; le serveur calcule le score et renvoie { score, rank }. */
+export async function envoyerScore(jeton, pseudo, compteurs, duree) {
+  return appeler('POST', 'scores.php', { game_token: jeton, pseudo, counts: compteurs, duree });
+}
+
+/** Dix meilleurs scores : { ok, scores: [{ pseudo, score }] }. */
+export async function lireClassement() {
+  return appeler('GET', 'scores.php');
 }
