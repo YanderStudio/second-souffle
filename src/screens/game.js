@@ -1,4 +1,4 @@
-// Écran Jeu : score en haut à gauche, icônes QR et Pause en haut à droite ;
+// Écran Jeu : score en haut à gauche, icônes Pause puis QR en haut à droite ;
 // rail, carton, polluants et poissons sont dessinés dans le canvas de #scene (sous le voile).
 import { creer, image, boutonIcone, auToucher } from './ui.js';
 import textes from '../data/textes.json';
@@ -10,7 +10,8 @@ let nettoyer = null;
 /**
  * params :
  *  - partie : partie en cours (game/loop.js), conservée entre les écrans
- *  - scanner() : facultatif, appelé par l'icône QR (la partie est déjà en pause)
+ *  - scanner() : appelé par l'icône QR (la partie est déjà en pause) ;
+ *    null quand tous les QR codes sont scannés : l'icône est alors atténuée et sans effet
  *  - accueil() : bouton Accueil du menu pause (la partie est abandonnée, score non enregistré)
  */
 export function entrer(racine, { partie, scanner, accueil }) {
@@ -33,10 +34,15 @@ export function entrer(racine, { partie, scanner, accueil }) {
 
   // L'icône QR ne déplace pas le carton : elle met en pause et ouvre le scanner
   qr.addEventListener('pointerdown', (e) => e.stopPropagation());
-  auToucher(qr, () => {
-    partie.mettreEnPause();
-    scanner?.();
-  });
+  if (scanner) {
+    auToucher(qr, () => {
+      partie.mettreEnPause();
+      scanner();
+    });
+  } else {
+    qr.classList.add('est-inactif');
+    qr.setAttribute('aria-disabled', 'true');
+  }
 
   // L'icône Pause ne déplace pas le carton : elle met en pause et ouvre le menu
   pause.addEventListener('pointerdown', (e) => e.stopPropagation());

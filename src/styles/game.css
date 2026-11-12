@@ -12,13 +12,19 @@
   white-space: nowrap;
 }
 
-/* Icône QR 70 × 70 */
+/* Icône QR 70 × 70, sous l'icône Pause */
 .jeu-qr {
   position: absolute;
   left: calc(299 * var(--u));
-  top: calc(30 * var(--u));
+  top: calc(110 * var(--u));
   width: calc(70 * var(--u));
   height: calc(70 * var(--u));
+}
+
+/* Tous les QR codes scannés : atténuée comme le bouton Accueil inactif */
+.jeu-qr.est-inactif {
+  opacity: 0.7;
+  cursor: default;
 }
 
 .jeu-qr__image {
@@ -34,11 +40,11 @@
   height: 100%;
 }
 
-/* Icône Pause 70 × 70, sous l'icône QR (même colonne, 10 px plus bas) */
+/* Icône Pause 70 × 70, en haut à droite (à la place relevée pour l'icône QR sur la maquette) */
 .jeu-pause {
   position: absolute;
   left: calc(299 * var(--u));
-  top: calc(110 * var(--u));
+  top: calc(30 * var(--u));
   width: calc(70 * var(--u));
   height: calc(70 * var(--u));
 }

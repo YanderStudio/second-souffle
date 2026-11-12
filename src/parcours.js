@@ -101,7 +101,9 @@ async function nouvellePartie() {
 }
 
 function versJeu() {
-  aller('jeu', { partie, scanner: versScanner, accueil: versAccueil });
+  // Tous les QR codes scannés : l'icône QR devient inactive
+  const toutDebloque = polluants.every((p) => stockage.lireDebloques().includes(p.id));
+  aller('jeu', { partie, scanner: toutDebloque ? null : versScanner, accueil: versAccueil });
 }
 
 /**
