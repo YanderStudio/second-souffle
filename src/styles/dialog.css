@@ -1,18 +1,25 @@
 /* Bulle de dialogue — mesures relevées sur Explication.png, Tutoriel.png, Explications_Polluant_*.png */
 
-/* Personnage : ancré au bas de l'écran, derrière la bulle */
+/* Personnage, derrière la bulle. Sa position ne dépend que de l'écran, jamais du texte :
+   - en haut, à la même proportion de hauteur que la maquette (remonte sur les écrans courts) ;
+   - mais assez bas pour que le bas de l'image (jambes coupées) passe toujours sous la bulle :
+     bas de l'image ≥ haut de la plus petite bulle du personnage + marge.
+   --perso-h : hauteur affichée de l'image (largeur × ratio du PNG), à revoir si l'image change.
+   --perso-bulle : hauteur minimale de la bulle où parle ce personnage (202 sans image, 219 avec). */
 .perso {
   position: absolute;
   left: calc(var(--perso-x) * var(--u));
-  /* Ancré en haut, à la même proportion de hauteur d'écran que la maquette (172,6 / 874) :
-     ne bouge jamais d'un texte à l'autre, et remonte sur les écrans courts */
-  top: calc(var(--perso-y) / 874 * 100%);
+  top: max(
+    calc(var(--perso-y) / 874 * 100%),
+    calc(100% - (42 + var(--perso-bulle) - var(--perso-marge) + var(--perso-h)) * var(--u))
+  );
   width: calc(var(--perso-l) * var(--u));
   pointer-events: none;
+  --perso-marge: 4; /* recouvrement minimal, celui de la maquette (Explication) */
 }
-.perso-pull-creme { --perso-x: 104; --perso-y: 172.6; --perso-l: 214; }
-.perso-polo-gris  { --perso-x: 102; --perso-y: 173; --perso-l: 175; }
-.perso-salopette  { --perso-x: 52;  --perso-y: 158.3; --perso-l: 286; }
+.perso-pull-creme { --perso-x: 104; --perso-y: 172.6; --perso-l: 214; --perso-h: 461.7; --perso-bulle: 202; }
+.perso-polo-gris  { --perso-x: 102; --perso-y: 173;   --perso-l: 175; --perso-h: 449.5; --perso-bulle: 219; }
+.perso-salopette  { --perso-x: 52;  --perso-y: 158.3; --perso-l: 286; --perso-h: 467.4; --perso-bulle: 219; }
 
 /* Bouche ouverte visible seulement pendant l'alternance */
 .perso--ouvert { visibility: hidden; }
@@ -30,6 +37,10 @@
   border-radius: var(--rayon-bulle);
   display: grid;
   grid-template-columns: 1fr;
+  /* Hauteur minimale = bulles actuelles : un texte plus court ne découvrirait pas le bas du personnage ;
+     l'espace en trop se place entre le texte et la flèche */
+  min-height: calc(202 * var(--u));
+  grid-template-rows: auto 1fr auto;
 }
 
 .bulle__nom {
@@ -41,6 +52,7 @@
   color: var(--turquoise);
   font-size: calc(15 * var(--u));
   line-height: calc(17 * var(--u));
+  align-self: start;
 }
 
 .bulle__fleche {
@@ -55,6 +67,7 @@
 
 /* Variante avec image de polluant : colonne image à gauche */
 .bulle--polluant {
+  min-height: calc(219 * var(--u));
   padding-right: calc(21 * var(--u));
   grid-template-columns: calc(94 * var(--u)) calc(216 * var(--u));
   column-gap: calc(9 * var(--u));
