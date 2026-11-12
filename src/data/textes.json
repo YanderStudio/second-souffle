@@ -1,6 +1,6 @@
 {
   "_note": "Textes de l'interface. Noms des personnages provisoires, à valider.",
-  "vitesseLettres": 30,
+  "vitesseLettres": 35,
   "alternanceBoucheMs": 130,
   "personnages": {
     "pull-creme": { "nom": "Léa MARTIN", "bouche": "/assets/personnages/pull-creme" },
