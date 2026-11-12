@@ -9,6 +9,7 @@ import * as jeu from './screens/game.js';
 import * as fin from './screens/gameover.js';
 import * as classement from './screens/scores.js';
 import { versAccueil } from './parcours.js';
+import { prechargerSons } from './services/audio.js';
 
 initialiser(document.getElementById('ecran'));
 enregistrer('accueil', accueil);
@@ -24,5 +25,6 @@ versAccueil();
 if (import.meta.env.PROD && 'serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').catch(() => {});
 }
-// Images lourdes des personnages chargées dès le lancement, sans retarder l'accueil
+// Images lourdes des personnages et sons chargés dès le lancement, sans retarder l'accueil
 dialogue.prechargerPersonnages();
+prechargerSons();
