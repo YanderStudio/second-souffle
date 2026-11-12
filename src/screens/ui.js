@@ -1,4 +1,5 @@
 // Petites fonctions de construction du DOM (toujours via textContent, jamais innerHTML)
+import { play } from '../services/audio.js';
 
 /** Crée un élément avec une classe et un texte facultatifs. */
 export function creer(balise, classe = '', texte = '') {
@@ -35,10 +36,14 @@ export function ligneScore(pseudo, score) {
   return ligne;
 }
 
-/** Associe une action au relâchement du pointeur (souris et tactile). */
-export function auToucher(el, action) {
+/**
+ * Associe une action au relâchement du pointeur (souris et tactile), avec un son
+ * (par défaut un clic d'eau tiré au hasard ; null = aucun son, l'action le joue elle-même).
+ */
+export function auToucher(el, action, son = 'clic') {
   el.addEventListener('pointerup', (e) => {
     if (e.button > 0) return; // ignore clic droit / milieu
+    if (son) play(son);
     action(e);
   });
 }

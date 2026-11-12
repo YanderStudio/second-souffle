@@ -1,5 +1,6 @@
 // Écrans de fin : saisie du pseudo, puis récapitulatif (pseudo et score), chacun avec le top 5
 import { creer, image, boutonIcone, auToucher, formaterScore, ligneScore } from './ui.js';
+import { play } from '../services/audio.js';
 import textes from '../data/textes.json';
 import '../styles/gameover.css';
 
@@ -66,6 +67,7 @@ export function entrer(racine, params) {
   formulaire.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (enCours) return;
+    play('clic');
     const pseudo = champ.value.trim();
     if (!pseudo) return (message.textContent = t.pseudoManquant);
     if (!MOTIF_PSEUDO.test(pseudo)) return (message.textContent = t.pseudoInvalide);
@@ -83,11 +85,19 @@ export function entrer(racine, params) {
   });
 
   // Accueil inactif tant que le pseudo n'est pas enregistré (sauf échec d'envoi)
-  auToucher(accueil, () => {
-    if (peutQuitter) return params.accueil();
-    message.textContent = t.pseudoManquant;
-    champ.focus();
-  });
+  // (son seulement quand il est actif)
+  auToucher(
+    accueil,
+    () => {
+      if (peutQuitter) {
+        play('clic');
+        return params.accueil();
+      }
+      message.textContent = t.pseudoManquant;
+      champ.focus();
+    },
+    null,
+  );
 }
 
 /** Récapitulatif : pseudo et score, top 5 relu (il inclut le score enregistré), Accueil actif. */

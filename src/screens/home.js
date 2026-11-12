@@ -12,7 +12,7 @@ export function entrer(racine, params) {
   const ecran = creer('section', 'ecran ecran-accueil');
   const jouer = boutonIcone('accueil-jouer', '/assets/icons/bouton-jouer.svg', 'Jouer');
   const scores = boutonIcone('accueil-scores', '/assets/icons/bouton-scores.svg', 'Scores');
-  auToucher(jouer, () => params.jouer());
+  auToucher(jouer, () => params.jouer(), 'plouf');
   auToucher(scores, () => params.scores());
   ecran.append(image('/assets/images/logo.svg', 'accueil-logo', 'Second Souffle'), jouer, scores);
 

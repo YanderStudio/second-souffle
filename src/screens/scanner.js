@@ -2,6 +2,7 @@
 // Un QR lu par la caméra suit le même chemin qu'un code tapé à la main.
 import { creer, image, auToucher } from './ui.js';
 import { lecteurQr, ouvrirCamera } from '../services/camera.js';
+import { play } from '../services/audio.js';
 import textes from '../data/textes.json';
 import '../styles/scanner.css';
 
@@ -64,6 +65,7 @@ export function entrer(racine, params) {
 
   formulaire.addEventListener('submit', (e) => {
     e.preventDefault();
+    play('clic');
     if (champ.value.trim()) tenter(champ.value);
   });
   auToucher(fermer, () => params.fermer());
