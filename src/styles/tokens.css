@@ -16,6 +16,7 @@
   /* Assombrissement du fond (dégradés Figma) */
   --ombre-haut: rgb(0 0 0 / 0.5);
   --ombre-bas: rgb(0 0 0 / 0.6);
+  --voile-eau: rgb(30 82 166 / 0.3); /* #1E52A6 à 30 % */
 
   /* Polices */
   --police-titre: 'Montserrat', 'Arial Black', sans-serif;

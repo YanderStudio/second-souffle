@@ -85,3 +85,17 @@ button {
   border: none;
   cursor: pointer;
 }
+
+/* Scène du jeu : polluants, poissons et carton passent sous le voile */
+#scene {
+  position: absolute;
+  inset: 0;
+}
+
+/* Voile bleu par-dessus le fond et la scène ; l'interface reste au-dessus */
+.voile {
+  position: absolute;
+  inset: 0;
+  background: var(--voile-eau);
+  pointer-events: none;
+}
