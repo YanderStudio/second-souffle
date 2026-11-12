@@ -37,8 +37,8 @@ export const CONFIG = {
   // Temps (s) pour que la vitesse rejoigne sa nouvelle valeur après un ramassage (évite les à-coups)
   lissageVitesse: 0.8,
 
-  // Un poisson pour environ quatre polluants
-  probabilitePoisson: 0.25,
+  // Un poisson pour environ deux polluants
+  probabilitePoisson: 0.5,
   // Écart horizontal minimal entre un poisson et le polluant de la même rangée (en plus des demi-largeurs)
   margePoisson: 30,
   // Arrivée d'un poisson au rail : au plus tôt margeArriveePoisson px (de chute de polluant) après
