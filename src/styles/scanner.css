@@ -1,0 +1,74 @@
+/* Écran Scanner (à créer) — fond noir comme l'export « Caméra QR Code.png » ;
+   champ et message dans le style de l'écran de fin, bloc ancré au milieu */
+.ecran-scanner {
+  background: var(--noir);
+}
+
+.scanner-consigne {
+  position: absolute;
+  left: calc(21 * var(--u));
+  right: calc(21 * var(--u));
+  top: calc(50% - 80 * var(--u));
+  text-align: center;
+  color: var(--blanc);
+}
+
+/* Champ du code avec bouton Play de validation à droite */
+.scanner-code {
+  position: absolute;
+  left: calc(21 * var(--u));
+  top: calc(50% - 20 * var(--u));
+  width: calc(360 * var(--u));
+  height: calc(40 * var(--u));
+  display: flex;
+  align-items: center;
+  background: var(--blanc);
+  border-radius: var(--rayon-champ);
+}
+
+.scanner-code__champ {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 calc(21 * var(--u));
+  border: none;
+  background: none;
+  outline: none;
+  font: inherit;
+  font-size: calc(20 * var(--u));
+  color: var(--turquoise);
+  text-transform: uppercase;
+  user-select: text;
+}
+.scanner-code__champ::placeholder {
+  color: var(--turquoise);
+  opacity: 0.5;
+  text-transform: none;
+}
+
+.scanner-code__valider {
+  width: calc(34 * var(--u));
+  height: calc(34 * var(--u));
+  margin-right: calc(6 * var(--u));
+}
+.scanner-code__valider img { width: 100%; height: 100%; display: block; }
+
+.scanner-message {
+  position: absolute;
+  left: calc(21 * var(--u));
+  right: calc(21 * var(--u));
+  top: calc(50% + 31 * var(--u));
+  text-align: center;
+  font-size: calc(15 * var(--u));
+  line-height: calc(17 * var(--u));
+  color: var(--orange);
+}
+
+/* Fermeture, en bas (même hauteur que le bouton Scores de l'accueil) */
+.scanner-fermer {
+  position: absolute;
+  left: 50%;
+  top: calc(100% - (874 - 790) * var(--u));
+  transform: translateX(-50%);
+  color: var(--turquoise);
+}

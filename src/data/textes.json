@@ -23,5 +23,10 @@
     "pseudoManquant": "Pseudo manquant : entrez votre pseudo.",
     "pseudoInvalide": "3 à 15 lettres, chiffres, espaces, - ou _."
   },
-  "classement": { "titre": "Top Scores" }
+  "classement": { "titre": "Top Scores" },
+  "scanner": {
+    "consigne": "Scannez un QR code",
+    "placeholder": "ou tapez le code",
+    "fermer": "Fermer"
+  }
 }

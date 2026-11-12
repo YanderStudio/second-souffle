@@ -13,6 +13,8 @@ import { play } from '../services/audio.js';
  *  - surDefaite({ score, compteurs, duree }) : partie perdue
  */
 export function creerPartie({ debloques, surDefaite }) {
+  // Sans p1 débloqué, la partie ne démarre pas
+  if (!debloques().includes('p1')) throw new Error('Partie impossible : p1 non débloqué');
   const avancerSpawner = creerSpawner(debloques);
   const objets = [];
   const compteurs = {};
