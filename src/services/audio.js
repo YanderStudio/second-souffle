@@ -8,6 +8,8 @@ import textes from '../data/textes.json';
 
 const VOLUME_VOIX = 0.35; // les sons de voix sont enregistrés très fort
 const HAUTEUR_VOIX = [0.92, 1.12]; // légère variation de hauteur à chaque son, comme une vraie voix
+// Volume de chaque son (1 = volume du fichier) ; absent = 1
+const VOLUMES = { clic: 0.6 };
 
 const SONS = {
   clic: ['/assets/sons/water-click.mp3', '/assets/sons/water-click2.mp3'],
@@ -70,7 +72,7 @@ function jouerUnDe(fichiers, volume = 1, hauteur = 1) {
 
 /** Joue le son nommé ; ne fait rien s'il n'a pas de fichier ou n'est pas encore chargé. */
 export function play(nom) {
-  jouerUnDe(SONS[nom] ?? []);
+  jouerUnDe(SONS[nom] ?? [], VOLUMES[nom] ?? 1);
 }
 
 /** Une « syllabe » de la voix d'un personnage : un de ses sons, hauteur légèrement variée. */
