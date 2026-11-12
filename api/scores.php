@@ -1,5 +1,7 @@
 <?php
-// GET  /api/scores.php — dix meilleurs (pseudo, score) : meilleur score de chaque joueur, le plus ancien d'abord à égalité.
+// GET  /api/scores.php — dix meilleurs (pseudo, score) : meilleur score de chaque pseudo, le plus ancien d'abord à égalité.
+//      Un même pseudo (à l'identique : majuscules et accents comptent) n'apparaît qu'une fois, avec son meilleur score,
+//      quel que soit l'appareil ; des pseudos différents d'un même joueur apparaissent chacun.
 // POST /api/scores.php — enregistre une partie. Reçoit : game_token, pseudo, counts. Renvoie : score, rank.
 //      Le score est calculé ici, jamais envoyé par le client. Erreur propre : 422 partie refusée.
 declare(strict_types=1);
@@ -9,10 +11,10 @@ require __DIR__ . '/lib/validation.php';
 require __DIR__ . '/lib/ratelimit.php';
 require __DIR__ . '/lib/jeu.php';
 
-// Meilleure partie de chaque joueur (n = 1)
+// Meilleure partie de chaque pseudo (n = 1), pseudos comparés à l'identique (utf8mb4_bin)
 const MEILLEURES = '
-    SELECT player_id, pseudo, score, finished_at,
-           ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY score DESC, finished_at ASC) AS n
+    SELECT pseudo COLLATE utf8mb4_bin AS pseudo, score, finished_at,
+           ROW_NUMBER() OVER (PARTITION BY pseudo COLLATE utf8mb4_bin ORDER BY score DESC, finished_at ASC) AS n
     FROM games WHERE score IS NOT NULL';
 
 if (exigerMethode('GET', 'POST') === 'GET') {
@@ -79,12 +81,12 @@ if ($dureeJeu < DUREE_JEU_MIN
 
 db()->prepare('UPDATE games SET score = ?, pseudo = ? WHERE token = ?')->execute([$score, $pseudo, $jeton]);
 
-// Rang : 1 + nombre d'autres joueurs dont la meilleure partie passe devant celle-ci
+// Rang : 1 + nombre d'autres pseudos dont la meilleure partie passe devant celle-ci
 $requete = db()->prepare(
     'SELECT COUNT(*) FROM (' . MEILLEURES . ') m
-     WHERE n = 1 AND player_id <> ? AND (score > ? OR (score = ? AND finished_at < ?))'
+     WHERE n = 1 AND pseudo <> ? AND (score > ? OR (score = ? AND finished_at < ?))'
 );
-$requete->execute([$joueur, $score, $score, $partie['finished_at']]);
+$requete->execute([$pseudo, $score, $score, $partie['finished_at']]);
 $rang = 1 + (int) $requete->fetchColumn();
 
 repondre(200, ['score' => $score, 'rank' => $rang]);

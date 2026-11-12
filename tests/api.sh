@@ -52,10 +52,24 @@ requete POST unlocks.php "{\"player_id\":\"$J\",\"code\":\"$C3\"}"; verifier "co
 requete POST unlocks.php "{\"player_id\":\"$J\",\"code\":\"$C3\"}"; verifier "code déjà utilisé : pas d'erreur" 200 '"polluant_id":"p3"'
 requete POST games.php "{\"player_id\":\"$J\"}"; verifier "début de partie" 200 game_token
 T=$(champ game_token)
+requete POST games.php "{\"player_id\":\"$J\"}"; TB=$(champ game_token)
+requete POST games.php "{\"player_id\":\"$J\"}"; TC=$(champ game_token)
+requete POST games.php "{\"player_id\":\"$J\"}"; TD=$(champ game_token)
 echo "   (attente de 4,5 s : durée minimale d'une partie)"; sleep 4.5
 requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"  Test Élodie \",\"counts\":{\"p1\":3,\"p3\":1},\"duree\":4.2}"
 verifier "score calculé par le serveur (3×50 + 1000)" 200 '"score":1150'
 requete GET scores.php; verifier "classement contient le pseudo (espaces retirés)" 200 '"pseudo":"Test Élodie","score":1150'
+
+echo "== Classement par pseudo"
+requete POST scores.php "{\"game_token\":\"$TB\",\"pseudo\":\"Test Élodie\",\"counts\":{\"p1\":1},\"duree\":4.2}"; verifier "même pseudo, score plus faible : enregistré" 200 '"score":50'
+requete POST scores.php "{\"game_token\":\"$TC\",\"pseudo\":\"Test Autre\",\"counts\":{\"p1\":2},\"duree\":4.2}"; verifier "même joueur, autre pseudo" 200 '"score":100'
+requete POST scores.php "{\"game_token\":\"$TD\",\"pseudo\":\"test élodie\",\"counts\":{\"p1\":1},\"duree\":4.2}"; verifier "pseudo en minuscules (différent)" 200 '"score":50'
+requete GET scores.php
+N=$(grep -o '"pseudo":"Test Élodie"' <<< "$CORPS" | wc -l)
+[ "$N" = 1 ] && [[ "$CORPS" == *'"pseudo":"Test Élodie","score":1150'* ]] \
+  && { OK=$((OK + 1)); echo "  OK  même pseudo : une seule ligne, le meilleur score (1150)"; } || { KO=$((KO + 1)); echo "  KO  même pseudo : $N ligne(s) $CORPS"; }
+verifier "autre pseudo du même joueur : sa propre ligne" 200 '"pseudo":"Test Autre","score":100'
+verifier "pseudo en minuscules : sa propre ligne" 200 '"pseudo":"test élodie","score":50'
 
 echo "== Jeton réutilisé"
 requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test\",\"counts\":{\"p1\":1},\"duree\":4.2}"; verifier "même jeton une 2e fois" 422
@@ -76,7 +90,7 @@ requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"XxFEURxX\",\"counts
 requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Coiffeur 59\",\"counts\":{},\"duree\":4.2}"; verifier "« Coiffeur » accepté (mot autorisé)" 422
 requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test=}]>\",\"counts\":{},\"duree\":4.2}"; verifier "symboles = } ] > acceptés" 422
 requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"=>Pute]}\",\"counts\":{},\"duree\":4.2}"; verifier "mot interdit entouré de symboles : refusé" 400 refus
-requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test{[<\",\"counts\":{},\"duree\":4.2}"; verifier "symboles { [ < : refusés" 400
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test{[<\",\"counts\":{},\"duree\":4.2}"; verifier "symboles { [ < acceptés" 422
 
 echo "== Score impossible"
 J2=$(nouveau_joueur)

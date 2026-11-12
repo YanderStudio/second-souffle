@@ -22,7 +22,7 @@
     "scoreFinal": "Score final :",
     "pseudo": "Pseudo :",
     "pseudoManquant": "Pseudo manquant : entrez votre pseudo.",
-    "pseudoInvalide": "3 à 15 lettres, chiffres, espaces, - _ = } ] ou >."
+    "pseudoInvalide": "3 à 15 lettres, chiffres, espaces, - _ = { } [ ] < ou >."
   },
   "classement": { "titre": "Top Scores" },
   "pause": { "titre": "Jeu en Pause", "reprendre": "Reprendre", "accueil": "Accueil" },

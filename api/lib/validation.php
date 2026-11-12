@@ -62,15 +62,15 @@ function normaliserCode(mixed $valeur): string
     return $code;
 }
 
-/** Pseudo : espaces retirés aux extrémités, 3 à 15 lettres, chiffres, espaces, - _ = } ] ou >, sans mot interdit. */
+/** Pseudo : espaces retirés aux extrémités, 3 à 15 lettres, chiffres, espaces, - _ = { } [ ] < ou >, sans mot interdit. */
 function validerPseudo(mixed $valeur): string
 {
     if (!is_string($valeur)) {
         erreur(400, 'Pseudo invalide.');
     }
     $pseudo = trim($valeur);
-    if (preg_match('/^[\p{L}\p{N} _=\}\]>-]{3,15}$/u', $pseudo) !== 1) {
-        erreur(400, 'Pseudo invalide : 3 à 15 lettres, chiffres, espaces, - _ = } ] ou >.');
+    if (preg_match('/^[\p{L}\p{N} _=\{\}\[\]<>-]{3,15}$/u', $pseudo) !== 1) {
+        erreur(400, 'Pseudo invalide : 3 à 15 lettres, chiffres, espaces, - _ = { } [ ] < ou >.');
     }
     if (contientMotInterdit($pseudo)) {
         erreur(400, 'Pseudo refusé.');
@@ -82,7 +82,7 @@ function validerPseudo(mixed $valeur): string
  * Compare le pseudo à la liste de mots interdits, sans accents ni majuscules
  * (les mots autorisés, faux positifs, sont d'abord retirés du pseudo) :
  *  - *mot* : refusé s'il apparaît n'importe où ;
- *  - mot court (≤ 5 lettres) : refusé s'il forme un mot entier (séparé par espace, - _ = } ] > ou chiffres) ;
+ *  - mot court (≤ 5 lettres) : refusé s'il forme un mot entier (séparé par espace, - _ = { } [ ] < > ou chiffres) ;
  *  - mot long : refusé s'il apparaît n'importe où, séparateurs retirés.
  */
 function contientMotInterdit(string $pseudo): bool
@@ -91,8 +91,8 @@ function contientMotInterdit(string $pseudo): bool
     foreach (lireListe('mots-autorises.txt') as $autorise) {
         $simple = str_replace($autorise, ' ', $simple);
     }
-    $mots = preg_split('/[ _=\}\]>-]+/', $simple, -1, PREG_SPLIT_NO_EMPTY);
-    $motsSansChiffres = preg_split('/[ _=\}\]>\-0-9]+/', $simple, -1, PREG_SPLIT_NO_EMPTY);
+    $mots = preg_split('/[ _=\{\}\[\]<>-]+/', $simple, -1, PREG_SPLIT_NO_EMPTY);
+    $motsSansChiffres = preg_split('/[ _=\{\}\[\]<>\-0-9]+/', $simple, -1, PREG_SPLIT_NO_EMPTY);
     $colle = implode('', $mots);
 
     foreach (lireListe('mots-interdits.txt') as $interdit) {
