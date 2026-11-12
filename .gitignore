@@ -1,0 +1,8 @@
+node_modules/
+dist/
+api/config.php
+BRIEF.md
+PROGRESS.md
+Game assets/
+CLAUDE.md
+.claude/

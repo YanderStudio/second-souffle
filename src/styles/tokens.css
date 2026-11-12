@@ -1,0 +1,27 @@
+/* Jetons de design relevés dans la maquette Figma (base 402 × 874) */
+:root {
+  /* Unité d'échelle : 1 px maquette = largeur de la colonne / 402 */
+  --largeur-max: 430px;
+  --u: calc(min(100vw, var(--largeur-max)) / 402);
+
+  /* Couleurs */
+  --orange: #ff8639;
+  --turquoise: #00acb0;
+  --bleu-nuit: #000f6b;
+  --blanc: #ffffff;
+  --bulle: #ffffff;
+  --noir: #000000;
+  --fond-neutre: #1c1c1c;
+
+  /* Assombrissement du fond (dégradés Figma) */
+  --ombre-haut: rgb(0 0 0 / 0.5);
+  --ombre-bas: rgb(0 0 0 / 0.6);
+
+  /* Polices */
+  --police-titre: 'Montserrat', 'Arial Black', sans-serif;
+  --police-texte: 'Arimo', Arial, sans-serif;
+
+  /* Rayons */
+  --rayon-bulle: calc(30 * var(--u));
+  --rayon-champ: calc(20 * var(--u));
+}

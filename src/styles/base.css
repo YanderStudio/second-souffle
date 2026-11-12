@@ -1,0 +1,87 @@
+/* Polices locales et mise en page générale */
+@font-face {
+  font-family: 'Montserrat';
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+  src: url('/assets/fonts/montserrat-latin-900-normal.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Arimo';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/assets/fonts/arimo-latin-400-normal.woff2') format('woff2');
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--fond-neutre);
+}
+
+body {
+  font-family: var(--police-texte);
+  color: var(--blanc);
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* Colonne au ratio téléphone, centrée sur grand écran */
+#app {
+  position: relative;
+  width: min(100vw, var(--largeur-max));
+  height: 100vh;
+  height: 100dvh;
+  margin: 0 auto;
+  overflow: hidden;
+  touch-action: none;
+}
+
+/* Fond marin : image ancrée en bas + dégradés noirs haut et bas */
+.fond {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, var(--ombre-haut), transparent 50%),
+    linear-gradient(to top, var(--ombre-bas), transparent 50%),
+    url('/assets/images/fond-marin.png') center bottom / cover no-repeat;
+}
+
+/* Cercle noir flou au centre (reproduction du blur Figma) */
+.fond::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(520 * var(--u));
+  height: calc(520 * var(--u));
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: var(--noir);
+  opacity: 0.3;
+  filter: blur(calc(90 * var(--u)));
+}
+
+/* Zone d'affichage de l'écran courant */
+#ecran {
+  position: absolute;
+  inset: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
