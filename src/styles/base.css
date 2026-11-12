@@ -156,6 +156,7 @@ button {
 .corail {
   position: absolute;
   width: calc(98 * var(--u));
+  transform: rotate(-11.45deg); /* rotation de la maquette */
   pointer-events: none;
 }
 

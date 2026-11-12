@@ -1,5 +1,5 @@
 {
-  "_note": "Noms et textes provisoires, à valider. Aucun code de déblocage ici (côté serveur uniquement).",
+  "_note": "Noms et textes provisoires, à valider. image = en jeu ; imageFiche (facultatif) = sur la fiche polluant, sinon image. Aucun code de déblocage ici (côté serveur uniquement).",
   "polluants": [
     {
       "id": "p1",
@@ -38,6 +38,7 @@
       "nom": "Plastique",
       "points": 5000,
       "image": "/assets/polluants/p5-bidon.svg",
+      "imageFiche": "/assets/polluants/p5-bidon-fiche.svg",
       "personnage": "salopette",
       "texte": "Le plastique enveloppe presque tous nos appareils. Abandonné, il se casse en petits morceaux que le vent et les rivières conduisent jusqu'à l'océan."
     }

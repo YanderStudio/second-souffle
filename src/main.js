@@ -33,7 +33,7 @@ function versTutoriel() {
 function versFiche(i) {
   const p = polluants[i];
   const suivant = i < polluants.length - 1 ? () => versFiche(i + 1) : versFin;
-  aller('dialogue', { personnage: p.personnage, texte: p.texte, polluantImage: p.image, suivant });
+  aller('dialogue', { personnage: p.personnage, texte: p.texte, polluantImage: p.imageFiche ?? p.image, suivant });
 }
 function versFin() {
   aller('fin', { score: 4250, enregistrer: async () => ({ ok: true }), accueil: versAccueil });
