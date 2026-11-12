@@ -19,5 +19,10 @@ enregistrer('fin', fin);
 enregistrer('classement', classement);
 
 versAccueil();
+
+// PWA : service worker en production seulement (en développement, il gênerait le rechargement de Vite)
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
 // Images lourdes des personnages chargées dès le lancement, sans retarder l'accueil
 dialogue.prechargerPersonnages();
