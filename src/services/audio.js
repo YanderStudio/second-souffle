@@ -1,7 +1,7 @@
 // Sons du jeu. Ajouter un son : déposer le fichier dans public/assets/sons/ et l'indiquer ici.
 // Plusieurs fichiers pour un même nom : l'un d'eux est tiré au hasard à chaque fois.
-// Appels placés : 'clic' (boutons et dialogues), 'plouf' (lancement de la toute première partie,
-// à la fermeture de la fiche du premier polluant),
+// Appels placés : 'clic' (boutons et dialogues), 'plouf' (lancement d'une partie : fermeture de la
+// fiche du premier polluant la toute première fois, puis bouton Jouer),
 // 'ramassage', 'defaite', 'deblocage' (encore muets : aucun fichier).
 const SONS = {
   clic: ['/assets/sons/water-click.mp3', '/assets/sons/water-click2.mp3'],

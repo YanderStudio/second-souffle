@@ -21,7 +21,18 @@ const p1Debloque = () => stockage.lireDebloques().includes('p1');
 
 export function versAccueil() {
   partie = null;
-  aller('accueil', { jouer: () => (p1Debloque() ? nouvellePartie() : versExplication()), scores: versClassement });
+  aller('accueil', { jouer: jouerDepuisAccueil, scores: versClassement });
+}
+
+/** Jouer : la partie se lance directement (plouf) si p1 est débloqué, sinon l'Explication (clic). */
+function jouerDepuisAccueil() {
+  if (p1Debloque()) {
+    play('plouf');
+    nouvellePartie();
+  } else {
+    play('clic');
+    versExplication();
+  }
 }
 
 /** Classement partagé lu sur le serveur ; en cas d'échec, liste vide et message. */
