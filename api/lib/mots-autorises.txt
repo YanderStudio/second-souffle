@@ -1,0 +1,7 @@
+# Mots autorisés : faux positifs à laisser passer (un par ligne, sans accents ni majuscules).
+# Ils sont retirés du pseudo avant la recherche des mots interdits :
+# « Coiffeur » passe malgré *feur*, mais « Coiffeur Feur » reste refusé.
+bouffeur
+coifeur
+coiffeur
+surfeur

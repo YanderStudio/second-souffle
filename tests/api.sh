@@ -72,6 +72,8 @@ requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"<script>alert(1)</s
 requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"ab\",\"counts\":{},\"duree\":4.2}"; verifier "pseudo trop court" 400
 requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Super-CONNÂRD\",\"counts\":{},\"duree\":4.2}"; verifier "mot interdit (accents, majuscules, collé)" 400 refus
 requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Test Unique\",\"counts\":{},\"duree\":4.2}"; verifier "« Unique » accepté (nique seulement en mot entier)" 422
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"XxFEURxX\",\"counts\":{},\"duree\":4.2}"; verifier "*feur* refusé n'importe où" 400 refus
+requete POST scores.php "{\"game_token\":\"$T\",\"pseudo\":\"Coiffeur 59\",\"counts\":{},\"duree\":4.2}"; verifier "« Coiffeur » accepté (mot autorisé)" 422
 
 echo "== Score impossible"
 J2=$(nouveau_joueur)

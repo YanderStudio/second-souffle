@@ -79,27 +79,49 @@ function validerPseudo(mixed $valeur): string
 }
 
 /**
- * Compare le pseudo à la liste de mots interdits, sans accents ni majuscules.
- * Mot court (≤ 5 lettres) : refusé s'il forme un mot entier du pseudo (séparé par espace, - ou _) ;
- * mot long : refusé s'il apparaît n'importe où, séparateurs retirés.
+ * Compare le pseudo à la liste de mots interdits, sans accents ni majuscules
+ * (les mots autorisés, faux positifs, sont d'abord retirés du pseudo) :
+ *  - *mot* : refusé s'il apparaît n'importe où ;
+ *  - mot court (≤ 5 lettres) : refusé s'il forme un mot entier (séparé par espace, -, _ ou chiffres) ;
+ *  - mot long : refusé s'il apparaît n'importe où, séparateurs retirés.
  */
 function contientMotInterdit(string $pseudo): bool
 {
     $simple = simplifier($pseudo);
+    foreach (lireListe('mots-autorises.txt') as $autorise) {
+        $simple = str_replace($autorise, ' ', $simple);
+    }
     $mots = preg_split('/[ _-]+/', $simple, -1, PREG_SPLIT_NO_EMPTY);
+    $motsSansChiffres = preg_split('/[ _\-0-9]+/', $simple, -1, PREG_SPLIT_NO_EMPTY);
     $colle = implode('', $mots);
-    $liste = file(__DIR__ . '/mots-interdits.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($liste as $interdit) {
-        $interdit = simplifier(trim($interdit));
-        if ($interdit === '' || str_starts_with($interdit, '#')) {
-            continue;
+
+    foreach (lireListe('mots-interdits.txt') as $interdit) {
+        if (preg_match('/^\*(.+)\*$/u', $interdit, $m) === 1) {
+            $trouve = str_contains($colle, $m[1]);
+        } elseif (mb_strlen($interdit) <= 5) {
+            $trouve = in_array($interdit, $mots, true) || in_array($interdit, $motsSansChiffres, true);
+        } else {
+            $trouve = str_contains($colle, $interdit);
         }
-        $court = mb_strlen($interdit) <= 5;
-        if ($court ? (in_array($interdit, $mots, true) || $colle === $interdit) : str_contains($colle, $interdit)) {
+        if ($trouve) {
             return true;
         }
     }
     return false;
+}
+
+/** Lignes utiles d'une liste de lib/ (sans commentaires ni lignes vides), simplifiées. */
+function lireListe(string $fichier): array
+{
+    $lignes = file(__DIR__ . '/' . $fichier, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $liste = [];
+    foreach ($lignes as $ligne) {
+        $ligne = simplifier(trim($ligne));
+        if ($ligne !== '' && !str_starts_with($ligne, '#')) {
+            $liste[] = $ligne;
+        }
+    }
+    return $liste;
 }
 
 /** Minuscules sans accents (é → e, Œ → oe…). */
