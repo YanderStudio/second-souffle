@@ -116,11 +116,22 @@ button {
   line-height: 1;
 }
 
-/* Bouton icône + libellé, centré horizontalement */
+/* Bouton icône + libellé, centré horizontalement.
+   Même gabarit partout (harmonisé, écart à la maquette demandé) : icône 80, 12 entre icône et libellé.
+   Le bouton du bas de chaque écran a le bas de son libellé à --marge-bas du bas de l'écran ;
+   un bouton placé au-dessus d'un autre s'en écarte de --ecart-boutons. */
+:root {
+  --marge-bas: calc(40 * var(--u));
+  --hauteur-bouton: calc((80 + 12 + 24) * var(--u)); /* icône + écart + libellé */
+  --ecart-boutons: calc(24 * var(--u));
+}
+
 .bouton-icone {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  --taille-icone: 80;
+  --ecart: 12;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -139,11 +150,9 @@ button {
   margin-top: calc(var(--ecart) * var(--u));
 }
 
-/* Bouton Accueil (fin et classement) */
+/* Bouton Accueil (fin et classement) : bouton du bas */
 .bouton-accueil {
-  top: calc(100% - (874 - 686.4) * var(--u));
-  --taille-icone: 80;
-  --ecart: 12;
+  bottom: var(--marge-bas);
   color: var(--orange);
 }
 

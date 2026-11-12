@@ -81,11 +81,11 @@
   color: var(--orange);
 }
 
-/* Fermeture, en bas (même hauteur que le bouton Scores de l'accueil) */
+/* Fermeture, en bas : même ligne que le libellé du bouton du bas des autres écrans */
 .scanner-fermer {
   position: absolute;
   left: 50%;
-  top: calc(100% - (874 - 790) * var(--u));
+  bottom: var(--marge-bas);
   transform: translateX(-50%);
   color: var(--turquoise);
 }

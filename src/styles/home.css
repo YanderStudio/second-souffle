@@ -6,11 +6,9 @@
   width: calc(267 * var(--u));
 }
 
-/* Boutons du bas, ancrés au bas de l'écran */
+/* Boutons du bas, ancrés au bas de l'écran : Scores en bas, Jouer juste au-dessus */
 .accueil-jouer {
-  top: calc(100% - (874 - 541) * var(--u));
-  --taille-icone: 80;
-  --ecart: 11.5;
+  bottom: calc(var(--marge-bas) + var(--hauteur-bouton) + var(--ecart-boutons));
   color: var(--orange);
 }
 
@@ -25,8 +23,6 @@
 }
 
 .accueil-scores {
-  top: calc(100% - (874 - 758) * var(--u));
-  --taille-icone: 60;
-  --ecart: 0.5;
+  bottom: var(--marge-bas);
   color: var(--turquoise);
 }
