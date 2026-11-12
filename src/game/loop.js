@@ -60,14 +60,15 @@ export function creerPartie({ debloques, surDefaite }) {
   /** Une étape de jeu de durée dt (s). */
   function mettreAJour(dt) {
     tempsJeu += dt;
-    objets.push(...avancerSpawner(dt, score));
+    objets.push(...avancerSpawner(dt, score, railY));
     // La vitesse rejoint en douceur celle que donne le score (accélère avec les points)
     const cible = rythme(score).vitesse;
     vitesse += (cible - vitesse) * Math.min(1, dt / CONFIG.lissageVitesse);
 
     for (let i = objets.length - 1; i >= 0; i--) {
       const o = objets[i];
-      o.y += vitesse * dt;
+      // Les poissons tombent plus vite que les polluants
+      o.y += vitesse * dt * (o.type === 'poisson' ? CONFIG.poisson.facteurVitesse : 1);
       if (seTouchent(o, carton)) {
         if (o.type === 'poisson') return perdre();
         ramasser(o);

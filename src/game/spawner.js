@@ -2,8 +2,9 @@
 // Toute situation reste gagnable :
 //  - l'écart horizontal entre deux polluants est faisable à la vitesse du carton ;
 //  - un poisson apparaît du côté d'un polluant opposé à l'arrivée du carton, à une distance
-//    et un peu au-dessus de lui tirées au hasard ; il arrive avant le polluant suivant,
-//    qui n'oblige jamais à le traverser.
+//    tirée au hasard ; il tombe plus vite que les polluants et atteint le rail entre l'arrivée
+//    du polluant précédent et celle du suivant (moment tiré au hasard) : le carton, qui va
+//    alors de l'un à l'autre en passant par ce polluant, n'est jamais de son côté.
 import { CONFIG } from './config.js';
 import { creerPolluant, creerPoisson } from './entities.js';
 
@@ -33,7 +34,7 @@ export function creerSpawner(debloques) {
   let poissonsEnAttente = 0; // poissons tirés mais pas encore placés
 
   /** Avance le temps ; renvoie les nouveaux objets à ajouter à la scène. */
-  return function avancer(dt, score) {
+  return function avancer(dt, score, railY) {
     minuteur -= dt;
     if (minuteur > 0) return [];
     minuteur += rythme(score).intervalle;
@@ -63,10 +64,7 @@ export function creerSpawner(debloques) {
     // Tirage du poisson ; faute de place, il est reporté sur un polluant suivant
     if (Math.random() < CONFIG.probabilitePoisson) poissonsEnAttente++;
     if (poissonsEnAttente > 0) {
-      const { vitesse, intervalle } = rythme(score);
-      // Hauteur au-dessus du polluant : au plus une fraction de l'écart avec le polluant suivant
-      const decalage = auHasard(0, CONFIG.decalagePoissonMax * vitesse * intervalle);
-      const poisson = placerPoisson(polluant, dernierX, decalage);
+      const poisson = placerPoisson(polluant, dernierX, hauteurPoisson(polluant, ecartVertical, score, railY));
       if (poisson) {
         nouveaux.push(poisson);
         cotePoisson = Math.sign(poisson.x - x);
@@ -80,10 +78,27 @@ export function creerSpawner(debloques) {
 }
 
 /**
- * Place un poisson du côté du polluant opposé à l'arrivée du carton, n'importe où entre
- * l'écart minimal et le bord de l'écran, decalage pixels plus haut ; null si pas de place.
+ * Hauteur de départ d'un poisson. Les distances sont comptées « en chute de polluant » :
+ * le poisson tombe facteurVitesse fois plus vite, il parcourt donc facteurVitesse fois plus.
+ * Il doit arriver au rail après le polluant précédent (avec une marge) et avant
+ * le polluant suivant (au plus une fraction de l'écart entre deux polluants après celui-ci).
  */
-function placerPoisson(polluant, xPrecedent, decalage) {
+function hauteurPoisson(polluant, ecartAvant, score, railY) {
+  const { facteurVitesse, hauteur } = CONFIG.poisson;
+  const { vitesse, intervalle } = rythme(score);
+  const distance = railY - polluant.y; // chute restante du polluant jusqu'au rail
+  const plusTot = distance - Math.min(ecartAvant, distance) + CONFIG.margeArriveePoisson;
+  const plusTard = distance + CONFIG.arriveePoissonMax * vitesse * intervalle;
+  const arrivee = auHasard(Math.min(plusTot, plusTard), plusTard);
+  // Jamais visible dès son apparition : s'il le faudrait, il part du haut et arrive un peu plus tard
+  return Math.min(railY - facteurVitesse * arrivee, -hauteur / 2);
+}
+
+/**
+ * Place un poisson du côté du polluant opposé à l'arrivée du carton, n'importe où entre
+ * l'écart minimal et le bord de l'écran, à la hauteur y ; null si pas de place.
+ */
+function placerPoisson(polluant, xPrecedent, y) {
   const { largeur } = CONFIG.poisson;
   const ecart = (polluant.largeur + largeur) / 2 + CONFIG.margePoisson;
   const bord = CONFIG.largeur - largeur / 2; // centre le plus à droite (le plus à gauche : largeur / 2)
@@ -96,7 +111,7 @@ function placerPoisson(polluant, xPrecedent, decalage) {
   for (const cote of cotes) {
     const proche = polluant.x + cote * ecart;
     const loin = cote > 0 ? bord : largeur / 2;
-    if ((loin - proche) * cote >= 0) return creerPoisson(auHasard(proche, loin), polluant.y - decalage);
+    if ((loin - proche) * cote >= 0) return creerPoisson(auHasard(proche, loin), y);
   }
   return null;
 }

@@ -11,8 +11,8 @@ export const CONFIG = {
   // Carton (image : filet de pêche) : centré sur le rail, il reste entre les extrémités du rail
   carton: { image: '/assets/images/filet.png', largeur: 100, hauteur: 121, xDepart: 201 },
 
-  // Poisson qui tombe, tête en bas
-  poisson: { image: '/assets/images/poisson.png', largeur: 70, hauteur: 80 },
+  // Poisson qui tombe, tête en bas, facteurVitesse fois plus vite que les polluants
+  poisson: { image: '/assets/images/poisson.png', largeur: 70, hauteur: 80, facteurVitesse: 1.5 },
 
   // Taille d'affichage des polluants en jeu (taille réelle des SVG)
   taillesPolluants: {
@@ -41,9 +41,11 @@ export const CONFIG = {
   probabilitePoisson: 0.25,
   // Écart horizontal minimal entre un poisson et le polluant de la même rangée (en plus des demi-largeurs)
   margePoisson: 30,
-  // Hauteur maximale d'un poisson au-dessus de son polluant, en fraction de l'écart entre deux polluants
-  // (au-delà de 0,5, il pourrait croiser le polluant suivant)
-  decalagePoissonMax: 0.45,
+  // Arrivée d'un poisson au rail : au plus tôt margeArriveePoisson px (de chute de polluant) après
+  // le polluant précédent, au plus tard arriveePoissonMax × l'écart entre deux polluants après le sien
+  // (au-delà de 0,5, il pourrait arriver en même temps que le polluant suivant)
+  margeArriveePoisson: 100,
+  arriveePoissonMax: 0.45,
 
   // Vitesse de déplacement du carton jugée faisable par un joueur (px/s) :
   // l'écart horizontal entre deux polluants successifs en tient compte
