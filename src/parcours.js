@@ -55,7 +55,10 @@ function versScanner() {
     valider: async (code) => {
       const avant = stockage.lireDebloques();
       const reponse = await api.debloquer(code);
-      if (reponse.ok) apresDeblocage(reponse.polluant_id, !avant.includes(reponse.polluant_id));
+      if (!reponse.ok) return reponse;
+      // QR code déjà scanné : refusé avec un message, on reste sur le scanner
+      if (avant.includes(reponse.polluant_id)) return { ok: false, message: textes.scanner.dejaScanne };
+      apresDeblocage(reponse.polluant_id);
       return reponse;
     },
     // Fermer ramène au jeu en pause, ou à l'accueil hors partie
@@ -63,9 +66,9 @@ function versScanner() {
   });
 }
 
-/** Un code valide (nouveau ou déjà utilisé) affiche la fiche ; le tutoriel passe avant, une seule fois. */
-function apresDeblocage(id, nouveau) {
-  if (nouveau) play('deblocage');
+/** Un nouveau code valide affiche la fiche ; le tutoriel passe avant, une seule fois. */
+function apresDeblocage(id) {
+  play('deblocage');
   if (id === 'p1' && !stockage.tutorielVu()) {
     stockage.marquerTutorielVu();
     // Première partie : le plouf accompagne la fermeture de la fiche du premier polluant

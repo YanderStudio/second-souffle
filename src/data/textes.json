@@ -37,6 +37,7 @@
   "scanner": {
     "consigne": "Scannez un QR code",
     "sansCamera": "Caméra indisponible : tapez le code du QR code.",
+    "dejaScanne": "Ce QR code a déjà été scanné.",
     "placeholder": "ou tapez le code",
     "fermer": "Fermer"
   }

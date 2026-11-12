@@ -14,6 +14,18 @@
 }
 .sans-camera .scanner-video { display: none; }
 
+/* Guide de visée 309 × 309, centré entre la consigne et le champ ; masqué sans caméra */
+.scanner-guide {
+  position: absolute;
+  left: 50%;
+  top: calc((84 * var(--u) + 100% - (874 - 660) * var(--u)) / 2);
+  width: calc(309 * var(--u));
+  height: calc(309 * var(--u));
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.sans-camera .scanner-guide { display: none; }
+
 /* Textes lisibles par-dessus l'image de la caméra */
 .scanner-consigne,
 .scanner-message,

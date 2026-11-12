@@ -40,7 +40,11 @@ export function entrer(racine, params) {
   const fermer = creer('button', 'scanner-fermer titre', t.fermer);
   fermer.type = 'button';
 
-  ecran.append(video, consigne, formulaire, message, fermer);
+  // Guide de visée (coins orange) au milieu de l'image de la caméra
+  const guide = image('/assets/icons/guide-qr.svg', 'scanner-guide');
+  guide.setAttribute('aria-hidden', 'true');
+
+  ecran.append(video, guide, consigne, formulaire, message, fermer);
   racine.append(ecran);
 
   let actif = true;
@@ -57,7 +61,7 @@ export function entrer(racine, params) {
     enCours = false;
     if (!actif || reponse.ok) return;
     message.textContent = reponse.message;
-    // Refus définitif (code inconnu, p1 requis) : inutile de le relire ;
+    // Refus définitif (code inconnu, p1 requis, déjà scanné) : inutile de le relire ;
     // injoignable ou trop de requêtes : la caméra réessaiera, mais pas avant quelques secondes
     if (reponse.statut === 0 || reponse.statut === 429) repriseCamera = performance.now() + ATTENTE_APRES_ECHEC;
     else refuses.add(code);
