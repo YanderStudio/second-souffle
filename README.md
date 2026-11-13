@@ -89,6 +89,8 @@ Les sons sont dans `public/assets/sons/` et déclarés en haut de `src/services/
 
 Pour ajouter un son : déposer le fichier dans `public/assets/sons/` et l'ajouter à la liste du nom voulu (plusieurs fichiers = tirage au hasard). Le volume de chaque son se règle dans `VOLUMES`. Les sons sont chargés au démarrage ; le silence au début d'un fichier est sauté automatiquement.
 
+**Musique de fond** : `musique-nautilus.mp3`, en boucle dès le premier appui sur l'écran, coupée quand l'application passe en arrière-plan. Fichier et volume en haut de `src/services/musique.js` (`FICHIER`, `VOLUME`). Elle est lue au fil de l'eau, pas décodée d'avance comme les autres sons (fichier long).
+
 **Voix des personnages** (« blabla » pendant l'écriture des bulles) : trois petits sons par personnage, listés dans `voix` de chaque personnage dans `textes.json` (fichiers dans `public/assets/sons/voix/`). Un son toutes les `voixLettresParSon` lettres ; volume dans `VOLUME_VOIX` de `audio.js`. Préférer des fichiers WAV 16 bits ou MP3 (les WAV 32 bits flottants ne sont pas lus partout).
 
 ## Structure

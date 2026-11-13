@@ -10,6 +10,7 @@ import * as fin from './screens/gameover.js';
 import * as classement from './screens/scores.js';
 import { versAccueil } from './parcours.js';
 import { prechargerSons } from './services/audio.js';
+import { lancerMusique } from './services/musique.js';
 
 initialiser(document.getElementById('ecran'));
 enregistrer('accueil', accueil);
@@ -28,3 +29,4 @@ if (import.meta.env.PROD && 'serviceWorker' in navigator) {
 // Images lourdes des personnages et sons chargés dès le lancement, sans retarder l'accueil
 dialogue.prechargerPersonnages();
 prechargerSons();
+lancerMusique();

@@ -44,6 +44,11 @@ export function prechargerSons() {
   }
 }
 
+/** Contexte audio partagé (null si le navigateur n'a pas Web Audio ou avant prechargerSons). */
+export function contexteAudio() {
+  return contexte;
+}
+
 /** Instant (s) où le son commence vraiment : le silence du début du fichier est sauté. */
 function debutDuSon(tampon) {
   const donnees = tampon.getChannelData(0);
