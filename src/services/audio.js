@@ -10,7 +10,7 @@ import textes from '../data/textes.json';
 const VOLUME_VOIX = 0.35; // les sons de voix sont enregistrés très fort
 const HAUTEUR_VOIX = [0.92, 1.12]; // légère variation de hauteur à chaque son, comme une vraie voix
 // Volume de chaque son (1 = volume du fichier) ; absent = 1
-const VOLUMES = { clic: 0.6, ramassage: 0.4 };
+const VOLUMES = { clic: 0.6, ramassage: 0.3 };
 
 const SONS = {
   clic: ['/assets/sons/water-click.mp3', '/assets/sons/water-click2.mp3'],
