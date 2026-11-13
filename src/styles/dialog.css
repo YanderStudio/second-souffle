@@ -1,0 +1,94 @@
+/* Bulle de dialogue — mesures relevées sur Explication.png, Tutoriel.png, Explications_Polluant_*.png */
+
+/* Personnage, derrière la bulle. Sa position ne dépend que de l'écran, jamais du texte :
+   - en haut, à la même proportion de hauteur que la maquette (remonte sur les écrans courts) ;
+   - mais assez bas pour que le bas de l'image (jambes coupées) passe toujours sous la bulle :
+     bas de l'image ≥ haut de la plus petite bulle du personnage + marge.
+   --perso-h : hauteur affichée de l'image (largeur × ratio du PNG), à revoir si l'image change.
+   --perso-bulle : hauteur minimale de la bulle où parle ce personnage (202 sans image, 219 avec). */
+.perso {
+  position: absolute;
+  left: calc(var(--perso-x) * var(--u));
+  top: max(
+    calc(var(--perso-y) / 874 * 100%),
+    calc(100% - (42 + var(--perso-bulle) - var(--perso-marge) + var(--perso-h)) * var(--u))
+  );
+  width: calc(var(--perso-l) * var(--u));
+  pointer-events: none;
+  --perso-marge: 4; /* recouvrement minimal, celui de la maquette (Explication) */
+}
+.perso-pull-creme { --perso-x: 104; --perso-y: 172.6; --perso-l: 214; --perso-h: 461.7; --perso-bulle: 202; }
+.perso-polo-gris  { --perso-x: 102; --perso-y: 173;   --perso-l: 175; --perso-h: 449.5; --perso-bulle: 219; }
+.perso-salopette  { --perso-x: 52;  --perso-y: 158.3; --perso-l: 286; --perso-h: 467.4; --perso-bulle: 219; }
+
+/* Bouche ouverte visible seulement pendant l'alternance */
+.perso--ouvert { visibility: hidden; }
+.parle .perso--ouvert { visibility: visible; }
+.parle .perso--ferme { visibility: hidden; }
+
+/* Bulle : ancrée en bas, hauteur selon le texte complet */
+.bulle {
+  position: absolute;
+  left: calc(21 * var(--u));
+  bottom: calc(42 * var(--u));
+  width: calc(360 * var(--u));
+  padding: calc(22.5 * var(--u)) calc(25 * var(--u)) calc(20.6 * var(--u)) calc(20 * var(--u));
+  background: var(--bulle);
+  border-radius: var(--rayon-bulle);
+  display: grid;
+  grid-template-columns: 1fr;
+  /* Hauteur minimale = bulles actuelles : un texte plus court ne découvrirait pas le bas du personnage ;
+     l'espace en trop se place entre le texte et la flèche */
+  min-height: calc(202 * var(--u));
+  grid-template-rows: auto 1fr auto;
+}
+
+.bulle__nom {
+  color: var(--orange);
+  margin-bottom: calc(10.5 * var(--u));
+}
+
+.bulle__texte {
+  color: var(--turquoise);
+  font-size: calc(15 * var(--u));
+  line-height: calc(17 * var(--u));
+  align-self: start;
+}
+
+.bulle__fleche {
+  justify-self: center;
+  width: calc(37.2 * var(--u));
+  height: calc(37.2 * var(--u));
+  margin-top: calc(19.2 * var(--u));
+  /* la flèche reste centrée sur la bulle malgré le padding asymétrique */
+  transform: translateX(calc(2.5 * var(--u)));
+}
+.bulle__fleche img { width: 100%; height: 100%; display: block; }
+
+/* Variante avec image de polluant : colonne image à gauche */
+.bulle--polluant {
+  min-height: calc(219 * var(--u));
+  padding-right: calc(21 * var(--u));
+  grid-template-columns: calc(94 * var(--u)) calc(216 * var(--u));
+  column-gap: calc(9 * var(--u));
+}
+.bulle--polluant .bulle__polluant {
+  grid-row: 1 / 3;
+  align-self: center;
+  justify-self: center;
+}
+.bulle--polluant .bulle__nom,
+.bulle--polluant .bulle__texte { grid-column: 2; }
+.bulle--polluant .bulle__fleche {
+  grid-column: 1 / 3;
+  transform: translateX(calc(0.5 * var(--u)));
+}
+
+/* Image du polluant à sa taille réelle (en unités maquette) */
+.bulle__polluant { width: calc(var(--l, 56) * var(--u)); }
+
+/* Corail en bas à droite de la bulle */
+.corail--bulle {
+  left: calc(310.7 * var(--u));
+  top: calc(100% - (874 - 757.5) * var(--u));
+}

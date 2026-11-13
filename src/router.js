@@ -18,7 +18,10 @@ export function enregistrer(nom, ecran) {
 /** Quitte l'écran courant et affiche l'écran demandé. */
 export function aller(nom, params = {}) {
   const suivant = ecrans.get(nom);
-  if (!suivant) throw new Error(`Écran inconnu : ${nom}`);
+  if (!suivant) {
+    console.warn(`Écran inconnu : ${nom}`); // nom mal écrit dans le parcours
+    return;
+  }
   ecranActuel?.quitter?.();
   racine.replaceChildren();
   racine.dataset.ecran = nom;

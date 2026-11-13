@@ -1,0 +1,140 @@
+/* Écran Jeu — positions relevées sur « Ecran de Jeu.png » (402 × 874), ancrées en haut */
+.ecran-jeu {
+  touch-action: none;
+}
+
+/* Score : Montserrat Black 24 px orange */
+.jeu-score {
+  position: absolute;
+  left: calc(24 * var(--u));
+  top: calc(52 * var(--u));
+  color: var(--orange);
+  white-space: nowrap;
+}
+
+/* Icône QR 70 × 70, sous l'icône Pause */
+.jeu-qr {
+  position: absolute;
+  left: calc(299 * var(--u));
+  top: calc(110 * var(--u));
+  width: calc(70 * var(--u));
+  height: calc(70 * var(--u));
+}
+
+/* Tous les QR codes scannés : atténuée comme le bouton Accueil inactif */
+.jeu-qr.est-inactif {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.jeu-qr__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Canvas de la scène (dans #scene, sous le voile) */
+.jeu-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Icône Pause 70 × 70, en haut à droite (à la place relevée pour l'icône QR sur la maquette) */
+.jeu-pause {
+  position: absolute;
+  left: calc(299 * var(--u));
+  top: calc(30 * var(--u));
+  width: calc(70 * var(--u));
+  height: calc(70 * var(--u));
+}
+
+.jeu-pause__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Menu pause : voile sombre sur tout l'écran, contenu centré verticalement */
+.jeu-menu {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.6);
+}
+
+.jeu-menu[hidden] {
+  display: none;
+}
+
+.jeu-menu__titre,
+.jeu-menu__score {
+  position: absolute;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+
+.jeu-menu__titre {
+  top: calc(50% - 150 * var(--u));
+  font-size: calc(32 * var(--u));
+}
+
+.jeu-menu__score {
+  top: calc(50% - 100 * var(--u));
+  color: var(--orange);
+}
+
+/* Reprendre et Accueil côte à côte */
+.jeu-menu__reprendre,
+.jeu-menu__accueil {
+  top: calc(50% - 20 * var(--u));
+  color: var(--orange);
+}
+
+.jeu-menu__reprendre {
+  left: calc(50% - 80 * var(--u));
+}
+
+.jeu-menu__accueil {
+  left: calc(50% + 80 * var(--u));
+}
+
+/* Décompte de reprise (3, 2, 1) : orange, police de titre, au milieu de l'écran */
+.jeu-decompte {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: calc(120 * var(--u));
+  color: var(--orange);
+  text-shadow: 0 0 calc(12 * var(--u)) rgb(0 0 0 / 0.5);
+  pointer-events: none;
+}
+
+.jeu-decompte[hidden] {
+  display: none;
+}
+
+/* Chaque chiffre apparaît en grossissant légèrement */
+.jeu-decompte--anime {
+  animation: decompte-apparition 0.35s ease-out;
+}
+
+@keyframes decompte-apparition {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) scale(1.4);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jeu-decompte--anime {
+    animation: none;
+  }
+}

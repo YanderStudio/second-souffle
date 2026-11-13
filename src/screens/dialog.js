@@ -1,0 +1,97 @@
+// Bulle de dialogue (Explication, Tutoriel, Fiche polluant) :
+// personnage qui « parle », texte écrit lettre par lettre, flèche pour continuer.
+import { creer, image, auToucher } from './ui.js';
+import { play, parler } from '../services/audio.js';
+import { ecrireLettreParLettre } from './typewriter.js';
+import textes from '../data/textes.json';
+import '../styles/dialog.css';
+
+let arreter = null;
+const imagesPrechargees = []; // gardées en mémoire pour un affichage immédiat
+
+/** Précharge les images des personnages (bouches ouvertes et fermées) en arrière-plan. */
+export function prechargerPersonnages() {
+  for (const perso of Object.values(textes.personnages)) {
+    for (const bouche of ['c', 'o']) {
+      const img = new Image();
+      img.src = `${perso.bouche}-${bouche}.png`;
+      imagesPrechargees.push(img);
+    }
+  }
+}
+
+/**
+ * params : { personnage, texte, polluantImage?, suivant, sonSuivant? }
+ *  - sonSuivant : son joué en quittant la boîte de dialogue à la place du clic
+ *  - personnage : id dans textes.json (pull-creme, polo-gris, salopette)
+ *  - polluantImage : facultatif, affiche la variante avec image
+ *  - suivant : appelé quand le joueur passe à l'écran suivant
+ */
+export function entrer(racine, params) {
+  const perso = textes.personnages[params.personnage];
+  const ecran = creer('section', `ecran ecran-dialogue perso-${params.personnage}`);
+
+  // Deux images superposées : bouche fermée (_c) et ouverte (_o)
+  const boucheFermee = image(`${perso.bouche}-c.png`, 'perso perso--ferme');
+  const boucheOuverte = image(`${perso.bouche}-o.png`, 'perso perso--ouvert');
+
+  const bulle = creer('div', params.polluantImage ? 'bulle bulle--polluant' : 'bulle');
+  // Nom de famille affiché ou non selon textes.json (afficherNomFamille)
+  const nomAffiche = textes.afficherNomFamille ? `${perso.prenom} ${perso.nomFamille}` : perso.prenom;
+  const nom = creer('p', 'bulle__nom titre', nomAffiche);
+  const texte = creer('p', 'bulle__texte');
+  const fleche = creer('button', 'bulle__fleche');
+  fleche.type = 'button';
+  fleche.setAttribute('aria-label', 'Continuer');
+  fleche.append(image('/assets/icons/bouton-jouer.svg'));
+
+  if (params.polluantImage) {
+    const img = image(params.polluantImage, 'bulle__polluant');
+    // Taille réelle du SVG convertie en unités maquette (remplacer le fichier suffit)
+    img.addEventListener('load', () => img.style.setProperty('--l', img.naturalWidth));
+    bulle.append(img);
+  }
+  bulle.append(nom, texte, fleche);
+  ecran.append(boucheFermee, boucheOuverte, bulle, image('/assets/images/corail.png', 'corail corail--bulle'));
+  racine.append(ecran);
+
+  // Alternance des bouches pendant l'écriture
+  const parle = (ouverte) => ecran.classList.toggle('parle', ouverte);
+  // Voix « blabla » : un son de la voix du personnage toutes les quelques lettres (espaces et ponctuation = silence)
+  let lettresSansSon = textes.voixLettresParSon; // la première lettre fait tout de suite un son
+  const surLettres = (lettres) => {
+    for (const lettre of lettres) {
+      if (!/[\p{L}\p{N}]/u.test(lettre)) continue;
+      if (++lettresSansSon < textes.voixLettresParSon) continue;
+      lettresSansSon = 0;
+      parler(perso.voix);
+    }
+  };
+  const ecriture = ecrireLettreParLettre(texte, params.texte, {
+    vitesse: textes.vitesseLettres,
+    alternanceMs: textes.alternanceBoucheMs,
+    surBouche: parle,
+    surLettres,
+  });
+  arreter = ecriture.arreter;
+
+  // Toucher : termine le texte, puis passe à l'écran suivant
+  auToucher(
+    ecran,
+    () => {
+      if (!ecriture.estTermine()) {
+        play('clic');
+        ecriture.terminer();
+      } else {
+        play(params.sonSuivant ?? 'clic');
+        params.suivant();
+      }
+    },
+    null,
+  );
+}
+
+export function quitter() {
+  arreter?.();
+  arreter = null;
+}

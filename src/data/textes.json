@@ -1,0 +1,44 @@
+{
+  "_note": "Textes de l'interface. Noms des personnages provisoires, à valider.",
+  "vitesseLettres": 35,
+  "alternanceBoucheMs": 130,
+  "_voix": "Voix façon « blabla » : un son de la voix du personnage (tiré au hasard) toutes les voixLettresParSon lettres.",
+  "voixLettresParSon": 3,
+  "afficherNomFamille": false,
+  "personnages": {
+    "pull-creme": { "prenom": "Léa", "nomFamille": "MARTIN", "bouche": "/assets/personnages/pull-creme", "voix": ["/assets/sons/voix/bleep012.wav", "/assets/sons/voix/bleep016.wav", "/assets/sons/voix/bleep027.wav"] },
+    "polo-gris": { "prenom": "Karim", "nomFamille": "BENALI", "bouche": "/assets/personnages/polo-gris", "voix": ["/assets/sons/voix/bleep004.wav", "/assets/sons/voix/bleep029.wav", "/assets/sons/voix/bleep009.wav"] },
+    "salopette": { "prenom": "Inès", "nomFamille": "DIALLO", "bouche": "/assets/personnages/salopette", "voix": ["/assets/sons/voix/bleep017.wav", "/assets/sons/voix/bleep026.wav", "/assets/sons/voix/bleep028.wav"] }
+  },
+  "explication": {
+    "personnage": "pull-creme",
+    "texte": "Tout au long de l’exposition, vous trouverez des QR Codes à scanner pour avancer dans le jeu, scannez votre tout premier QR code pour commencer."
+  },
+  "tutoriel": {
+    "personnage": "pull-creme",
+    "texte": "Parfait ! Vous avez scanné le tout premier polluant, tout au long de votre partie, votre objectif sera de ramasser le plus de polluants possible ! Attention à ne pas ramasser de poissons ou à laisser s’échapper des polluants, sinon, c’est perdu !"
+  },
+  "fin": {
+    "perdu": "Perdu !",
+    "top5": "Top 5",
+    "scoreFinal": "Score final :",
+    "pseudo": "Pseudo :",
+    "pseudoManquant": "Pseudo manquant : entrez votre pseudo.",
+    "pseudoInvalide": "3 à 15 lettres, chiffres, espaces, - _ = { } [ ] < ou >."
+  },
+  "classement": { "titre": "Top Scores" },
+  "pause": { "titre": "Jeu en Pause", "reprendre": "Reprendre", "accueil": "Accueil" },
+  "erreurs": {
+    "injoignable": "Serveur injoignable, réessayez.",
+    "serveur": "Le serveur a rencontré un problème, réessayez.",
+    "classement": "Classement indisponible pour le moment.",
+    "scoreNonEnregistre": "Score non enregistré : le serveur était injoignable au début de la partie."
+  },
+  "scanner": {
+    "consigne": "Scannez un QR code",
+    "sansCamera": "Caméra indisponible : tapez le code du QR code.",
+    "dejaScanne": "Ce QR code a déjà été scanné.",
+    "placeholder": "ou tapez le code",
+    "fermer": "Fermer"
+  }
+}

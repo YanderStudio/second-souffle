@@ -1,0 +1,20 @@
+# API Second Souffle : seuls les quatre points d'entrée PHP sont accessibles en HTTP.
+Options -Indexes
+
+# Aucun détail d'erreur affiché (mod_php)
+<IfModule mod_php.c>
+  php_flag display_errors off
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag display_errors off
+</IfModule>
+
+# Interdits : configuration, modèle, schéma, et tout fichier non PHP
+<FilesMatch "^(config\.php|config\.example\.php|schema\.sql)$">
+  Require all denied
+</FilesMatch>
+<FilesMatch "\.(sql|txt|md|ini|log)$">
+  Require all denied
+</FilesMatch>
+
+# Aucun en-tête CORS : l'API ne sert que le jeu (même origine via le proxy Vite)

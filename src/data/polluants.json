@@ -1,0 +1,46 @@
+{
+  "_note": "Noms et textes provisoires, à valider. image = en jeu ; imageFiche (facultatif) = sur la fiche polluant, sinon image. Aucun code de déblocage ici (côté serveur uniquement).",
+  "polluants": [
+    {
+      "id": "p1",
+      "nom": "Mercure",
+      "points": 50,
+      "image": "/assets/polluants/p1-tache.svg",
+      "personnage": "pull-creme",
+      "texte": "Le mercure se cache dans certains vieux écrans et piles. Quand un appareil finit dans la nature, la pluie l'entraîne vers les rivières, puis jusqu'à la mer."
+    },
+    {
+      "id": "p2",
+      "nom": "Lithium",
+      "points": 500,
+      "image": "/assets/polluants/p2-pile.svg",
+      "personnage": "polo-gris",
+      "texte": "Le lithium fait tourner les batteries de nos téléphones. Jetée au mauvais endroit, une batterie s'abîme et son contenu rejoint les cours d'eau."
+    },
+    {
+      "id": "p3",
+      "nom": "Plomb",
+      "points": 1000,
+      "image": "/assets/polluants/p3-lingot.svg",
+      "personnage": "salopette",
+      "texte": "Le plomb a longtemps servi à souder les composants. Dans une décharge à ciel ouvert, il se dépose dans les sols et finit par glisser vers la mer."
+    },
+    {
+      "id": "p4",
+      "nom": "Silicium",
+      "points": 2000,
+      "image": "/assets/polluants/p4-circuit.svg",
+      "personnage": "pull-creme",
+      "texte": "Le silicium est au cœur des circuits imprimés. Des cartes électroniques abandonnées se brisent en fragments que l'eau emporte loin des côtes."
+    },
+    {
+      "id": "p5",
+      "nom": "Plastique",
+      "points": 5000,
+      "image": "/assets/polluants/p5-bidon.svg",
+      "imageFiche": "/assets/polluants/p5-bidon-fiche.svg",
+      "personnage": "salopette",
+      "texte": "Le plastique enveloppe presque tous nos appareils. Abandonné, il se casse en petits morceaux que le vent et les rivières conduisent jusqu'à l'océan."
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+# Mots interdits dans les pseudos (un par ligne). Comparaison sans accents ni majuscules.
+#  - *mot*  : refusé s'il apparaît n'importe où dans le pseudo (ex. *feur* refuse « XxFeurxX »).
+#  - mot de 5 lettres ou moins : refusé s'il forme un mot entier (séparé par espace, -, _ ou chiffres :
+#    « Pute69 » refusé, « Dispute » accepté).
+#  - mot plus long : refusé s'il apparaît n'importe où, séparateurs retirés (« Super-Salope » refusé).
+# Faux positifs à laisser passer : voir mots-autorises.txt.
+# Emojis et symboles (€, ®…) inutiles ici : le pseudo n'accepte que lettres, chiffres, espaces, - et _.
+
+# --- Liste de l'utilisateur (Game assets/banned.txt)
+adolf
+adolfus
+ass
+bander
+batard
+bbc
+bite
+bz
+coubeh
+couille
+couilles
+cum
+cuming
+dick
+dodolf
+egorger
+ejac
+ejacul
+ejaculation
+ejaculer
+enculer
+f3ur
+fdp
+feur
+*feur*
+fi
+fuck
+fucked
+fuke
+gayland
+gor
+gork
+grop
+hitler
+lebron
+maitresse
+nazie
+neg
+negre
+negro
+nigga
+nigger
+nique
+nique
+niqz
+ntm
+orgie
+pd
+penis
+pupute
+pute
+*ɹnǝɟ*
+salope
+sexcam
+sodo
+sodomie
+sodomite
+sperm
+sperme
+suce
+sucer
+titten
+torture
+torturer
+viole
+violer
+violeur
+wore
+zeub
+zizi
+
+# --- Ajouts de la première version (à garder ou retirer)
+connard
+connasse
+encule
+enfoire
+chatte
+niquer
+nazi
+putain
+merde
+pede
+tg
+bougnoul
+youpin
+gouine
+tapette
+shit
+bitch
+asshole
+cunt
+whore
+slut
+porn
+porno
+sexe
+sex
+viol

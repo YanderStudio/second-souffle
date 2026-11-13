@@ -1,0 +1,103 @@
+/* Écran Scanner (à créer) — fond noir comme l'export « Caméra QR Code.png ».
+   Image de la caméra en plein écran ; consigne en haut, saisie et fermeture en bas
+   (le milieu reste libre pour viser le QR code). */
+.ecran-scanner {
+  background: var(--noir);
+}
+
+.scanner-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sans-camera .scanner-video { display: none; }
+
+/* Guide de visée 309 × 309, centré entre la consigne et le champ ; masqué sans caméra */
+.scanner-guide {
+  position: absolute;
+  left: 50%;
+  top: calc((84 * var(--u) + 100% - (874 - 660) * var(--u)) / 2);
+  width: calc(309 * var(--u));
+  height: calc(309 * var(--u));
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.sans-camera .scanner-guide { display: none; }
+
+/* Textes lisibles par-dessus l'image de la caméra */
+.scanner-consigne,
+.scanner-message,
+.scanner-fermer {
+  text-shadow: 0 0 calc(6 * var(--u)) rgb(0 0 0 / 0.8);
+}
+
+.scanner-consigne {
+  position: absolute;
+  left: calc(21 * var(--u));
+  right: calc(21 * var(--u));
+  top: calc(60 * var(--u));
+  text-align: center;
+  color: var(--blanc);
+}
+
+/* Champ du code avec bouton Play de validation à droite */
+.scanner-code {
+  position: absolute;
+  left: calc(21 * var(--u));
+  top: calc(100% - (874 - 660) * var(--u));
+  width: calc(360 * var(--u));
+  height: calc(40 * var(--u));
+  display: flex;
+  align-items: center;
+  background: var(--blanc);
+  border-radius: var(--rayon-champ);
+}
+
+.scanner-code__champ {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 calc(21 * var(--u));
+  border: none;
+  background: none;
+  outline: none;
+  font: inherit;
+  font-size: calc(20 * var(--u));
+  color: var(--turquoise);
+  text-transform: uppercase;
+  user-select: text;
+}
+.scanner-code__champ::placeholder {
+  color: var(--turquoise);
+  opacity: 0.5;
+  text-transform: none;
+}
+
+.scanner-code__valider {
+  width: calc(34 * var(--u));
+  height: calc(34 * var(--u));
+  margin-right: calc(6 * var(--u));
+}
+.scanner-code__valider img { width: 100%; height: 100%; display: block; }
+
+.scanner-message {
+  position: absolute;
+  left: calc(21 * var(--u));
+  right: calc(21 * var(--u));
+  top: calc(100% - (874 - 711) * var(--u));
+  text-align: center;
+  font-size: calc(15 * var(--u));
+  line-height: calc(17 * var(--u));
+  color: var(--orange);
+}
+
+/* Fermeture, en bas : même ligne que le libellé du bouton du bas des autres écrans */
+.scanner-fermer {
+  position: absolute;
+  left: 50%;
+  bottom: var(--marge-bas);
+  transform: translateX(-50%);
+  color: var(--turquoise);
+}
