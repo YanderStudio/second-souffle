@@ -2,19 +2,20 @@
 // Plusieurs fichiers pour un même nom : l'un d'eux est tiré au hasard à chaque fois.
 // Appels placés : 'clic' (boutons et dialogues), 'plouf' (lancement d'une partie : fermeture de la
 // fiche du premier polluant la toute première fois, puis bouton Jouer),
-// 'ramassage', 'defaite', 'deblocage' (encore muets : aucun fichier).
+// 'ramassage' (polluant attrapé), 'defaite', 'deblocage' (muets : aucun fichier, choix assumé).
+// Musique de fond : services/musique.js.
 // Voix des personnages : fichiers indiqués dans textes.json (personnages → voix), joués par parler().
 import textes from '../data/textes.json';
 
 const VOLUME_VOIX = 0.35; // les sons de voix sont enregistrés très fort
 const HAUTEUR_VOIX = [0.92, 1.12]; // légère variation de hauteur à chaque son, comme une vraie voix
 // Volume de chaque son (1 = volume du fichier) ; absent = 1
-const VOLUMES = { clic: 0.6 };
+const VOLUMES = { clic: 0.6, ramassage: 0.4 };
 
 const SONS = {
   clic: ['/assets/sons/water-click.mp3', '/assets/sons/water-click2.mp3'],
   plouf: ['/assets/sons/water-splash.mp3'],
-  ramassage: [],
+  ramassage: ['/assets/sons/swosh-03.flac', '/assets/sons/swosh-05.flac', '/assets/sons/swosh-07.flac'],
   defaite: [],
   deblocage: [],
 };

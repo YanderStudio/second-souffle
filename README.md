@@ -83,9 +83,9 @@ Les sons sont dans `public/assets/sons/` et déclarés en haut de `src/services/
 | --- | --- | --- |
 | `clic` | appui sur un bouton ou une bulle | `water-click.mp3`, `water-click2.mp3` (au hasard) |
 | `plouf` | lancement d'une partie | `water-splash.mp3` |
-| `ramassage` | polluant ramassé | aucun pour l'instant |
-| `defaite` | partie perdue | aucun pour l'instant |
-| `deblocage` | nouveau QR code scanné | aucun pour l'instant |
+| `ramassage` | polluant ramassé | `swosh-03.flac`, `swosh-05.flac`, `swosh-07.flac` (au hasard) |
+| `defaite` | partie perdue | aucun (volontairement muet) |
+| `deblocage` | nouveau QR code scanné | aucun (volontairement muet) |
 
 Pour ajouter un son : déposer le fichier dans `public/assets/sons/` et l'ajouter à la liste du nom voulu (plusieurs fichiers = tirage au hasard). Le volume de chaque son se règle dans `VOLUMES`. Les sons sont chargés au démarrage ; le silence au début d'un fichier est sauté automatiquement.
 
